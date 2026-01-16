@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 deps: ## Install dependencies and tools
 	go mod download
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 
 build: ## Build phpx binary
 	go build -o bin/phpx ./cmd/phpx
