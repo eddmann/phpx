@@ -23,19 +23,12 @@ Examples:
   phpx tool phpstan@1.10.0     Run specific version`,
 	SilenceUsage:  true,
 	SilenceErrors: true,
-	// Default: treat first arg as script if it's a .php file
-	Args: func(cmd *cobra.Command, args []string) error {
-		return nil
-	},
+	Args: cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			return cmd.Help()
 		}
-		// If first arg looks like a PHP file or is "-", run it
-		if args[0] == "-" || isPhpFile(args[0]) {
-			return runScript(cmd, args)
-		}
-		return cmd.Help()
+		return runScript(cmd, args)
 	},
 }
 
@@ -46,8 +39,4 @@ func init() {
 
 func Execute() error {
 	return rootCmd.Execute()
-}
-
-func isPhpFile(path string) bool {
-	return len(path) > 4 && path[len(path)-4:] == ".php"
 }

@@ -109,6 +109,24 @@ Declare dependencies in a `// phpx` comment block at the top of your script:
 | `packages`   | string[] | Composer packages as `vendor/name:constraint` |
 | `extensions` | string[] | Required PHP extensions                       |
 
+## Shebang Support
+
+Make PHP scripts directly executable:
+
+```php
+#!/usr/bin/env phpx
+<?php
+// phpx
+// packages = ["nesbot/carbon:^3.0"]
+
+echo \Carbon\Carbon::now()->format('Y-m-d');
+```
+
+```bash
+chmod +x script.php
+./script.php
+```
+
 ## Command Reference
 
 ### phpx run

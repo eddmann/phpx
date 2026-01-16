@@ -101,6 +101,19 @@ echo "Hello";
 			wantPHP:  ">=8.1",
 			wantPkgs: []string{"vendor/pkg:^1.0"},
 		},
+		{
+			name: "parses metadata with shebang",
+			content: `#!/usr/bin/env phpx
+<?php
+// phpx
+// packages = ["nesbot/carbon:^3.0"]
+
+use Carbon\Carbon;
+`,
+			wantPHP:  "",
+			wantPkgs: []string{"nesbot/carbon:^3.0"},
+			wantExts: nil,
+		},
 	}
 
 	for _, tt := range tests {

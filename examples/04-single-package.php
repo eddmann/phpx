@@ -1,3 +1,4 @@
+#!/usr/bin/env phpx
 <?php
 // phpx
 // packages = ["nesbot/carbon:^3.0"]
