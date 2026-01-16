@@ -4,6 +4,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const logo = `
+ ██████╗ ██╗  ██╗██████╗ ██╗  ██╗
+ ██╔══██╗██║  ██║██╔══██╗╚██╗██╔╝
+ ██████╔╝███████║██████╔╝ ╚███╔╝
+ ██╔═══╝ ██╔══██║██╔═══╝  ██╔██╗
+ ██║     ██║  ██║██║     ██╔╝ ██╗
+ ╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝
+`
+
 var (
 	verbose bool
 	quiet   bool
@@ -35,6 +44,10 @@ Examples:
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "show detailed output")
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "suppress phpx output")
+
+	rootCmd.SetHelpTemplate(logo + `{{with (or .Long .Short)}}{{. | trimTrailingWhitespaces}}
+
+{{end}}{{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`)
 }
 
 func Execute() error {
