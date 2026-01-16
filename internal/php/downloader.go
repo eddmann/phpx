@@ -52,7 +52,7 @@ func Download(version, tier, destPath string, showProgress bool) error {
 	if err != nil {
 		return fmt.Errorf("failed to download PHP: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("failed to download PHP: HTTP %d", resp.StatusCode)
@@ -91,7 +91,7 @@ func extractTarGz(r io.Reader, destDir string) error {
 	if err != nil {
 		return err
 	}
-	defer gzr.Close()
+	defer func() { _ = gzr.Close() }()
 
 	tr := tar.NewReader(gzr)
 
@@ -123,10 +123,10 @@ func extractTarGz(r io.Reader, destDir string) error {
 			}
 
 			if _, err := io.Copy(f, tr); err != nil {
-				f.Close()
+				_ = f.Close()
 				return err
 			}
-			f.Close()
+			_ = f.Close()
 
 		case tar.TypeSymlink:
 			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {

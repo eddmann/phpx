@@ -61,13 +61,13 @@ func runScript(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("failed to create temp file: %w", err)
 		}
-		defer os.Remove(tmpFile.Name())
+		defer func() { _ = os.Remove(tmpFile.Name()) }()
 
 		if _, err := io.Copy(tmpFile, os.Stdin); err != nil {
-			tmpFile.Close()
+			_ = tmpFile.Close()
 			return fmt.Errorf("failed to read stdin: %w", err)
 		}
-		tmpFile.Close()
+		_ = tmpFile.Close()
 		scriptPath = tmpFile.Name()
 	} else {
 		// Verify script exists

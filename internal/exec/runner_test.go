@@ -12,14 +12,14 @@ func TestRunTool_runs_in_callers_working_directory(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create work dir: %v", err)
 	}
-	defer os.RemoveAll(workDir)
+	defer func() { _ = os.RemoveAll(workDir) }()
 
 	// Create a separate temp directory to act as the "tool installation"
 	toolDir, err := os.MkdirTemp("", "tooldir")
 	if err != nil {
 		t.Fatalf("failed to create tool dir: %v", err)
 	}
-	defer os.RemoveAll(toolDir)
+	defer func() { _ = os.RemoveAll(toolDir) }()
 
 	// Create vendor/bin directory structure
 	binDir := filepath.Join(toolDir, "vendor", "bin")
@@ -44,7 +44,7 @@ touch marker.txt
 	if err := os.Chdir(workDir); err != nil {
 		t.Fatalf("failed to change to work dir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	// Run the tool (using /bin/sh as the "PHP" binary)
 	exitCode, err := RunTool("/bin/sh", toolDir, "marker", nil)
@@ -75,7 +75,7 @@ func TestRunTool_returns_nonzero_exit_code(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create tool dir: %v", err)
 	}
-	defer os.RemoveAll(toolDir)
+	defer func() { _ = os.RemoveAll(toolDir) }()
 
 	binDir := filepath.Join(toolDir, "vendor", "bin")
 	if err := os.MkdirAll(binDir, 0755); err != nil {
@@ -107,7 +107,7 @@ func TestRunTool_passes_arguments_to_binary(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create tool dir: %v", err)
 	}
-	defer os.RemoveAll(toolDir)
+	defer func() { _ = os.RemoveAll(toolDir) }()
 
 	binDir := filepath.Join(toolDir, "vendor", "bin")
 	if err := os.MkdirAll(binDir, 0755); err != nil {
@@ -122,7 +122,7 @@ echo "$1" > /tmp/phpx-test-arg.txt
 	if err := os.WriteFile(scriptPath, []byte(script), 0755); err != nil {
 		t.Fatalf("failed to write script: %v", err)
 	}
-	defer os.Remove("/tmp/phpx-test-arg.txt")
+	defer func() { _ = os.Remove("/tmp/phpx-test-arg.txt") }()
 
 	exitCode, err := RunTool("/bin/sh", toolDir, "argcheck", []string{"test-value"})
 
@@ -149,7 +149,7 @@ func TestRunScript_runs_in_callers_working_directory(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create work dir: %v", err)
 	}
-	defer os.RemoveAll(workDir)
+	defer func() { _ = os.RemoveAll(workDir) }()
 
 	// Create a script that writes a marker file
 	scriptPath := filepath.Join(workDir, "script.sh")
@@ -165,7 +165,7 @@ touch script-marker.txt
 	if err != nil {
 		t.Fatalf("failed to create other dir: %v", err)
 	}
-	defer os.RemoveAll(otherDir)
+	defer func() { _ = os.RemoveAll(otherDir) }()
 
 	origDir, err := os.Getwd()
 	if err != nil {
@@ -174,7 +174,7 @@ touch script-marker.txt
 	if err := os.Chdir(otherDir); err != nil {
 		t.Fatalf("failed to change dir: %v", err)
 	}
-	defer os.Chdir(origDir)
+	defer func() { _ = os.Chdir(origDir) }()
 
 	exitCode, err := RunScript("/bin/sh", scriptPath, "", nil)
 
@@ -204,7 +204,7 @@ func TestRunScript_returns_nonzero_exit_code(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	scriptPath := filepath.Join(tmpDir, "fail.sh")
 	script := `#!/bin/sh

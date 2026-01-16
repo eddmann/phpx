@@ -217,7 +217,7 @@ func cacheRefresh(cmd *cobra.Command, args []string) error {
 
 func dirSize(path string) int64 {
 	var size int64
-	filepath.WalkDir(path, func(_ string, d fs.DirEntry, err error) error {
+	_ = filepath.WalkDir(path, func(_ string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}

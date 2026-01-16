@@ -128,8 +128,8 @@ func TestExists(t *testing.T) {
 		if err != nil {
 			t.Fatalf("CreateTemp() error: %v", err)
 		}
-		defer os.Remove(tmpFile.Name())
-		tmpFile.Close()
+		defer func() { _ = os.Remove(tmpFile.Name()) }()
+		_ = tmpFile.Close()
 
 		got := Exists(tmpFile.Name())
 
@@ -153,7 +153,7 @@ func TestEnsureDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("MkdirTemp() error: %v", err)
 		}
-		defer os.RemoveAll(tmpDir)
+		defer func() { _ = os.RemoveAll(tmpDir) }()
 
 		newDir := filepath.Join(tmpDir, "a", "b", "c")
 
@@ -173,7 +173,7 @@ func TestEnsureDir(t *testing.T) {
 		if err != nil {
 			t.Fatalf("MkdirTemp() error: %v", err)
 		}
-		defer os.RemoveAll(tmpDir)
+		defer func() { _ = os.RemoveAll(tmpDir) }()
 
 		err = EnsureDir(tmpDir)
 
