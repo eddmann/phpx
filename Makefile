@@ -5,6 +5,10 @@ SHELL := /bin/bash
 
 ##@ Development
 
+deps: ## Install dependencies and tools
+	go mod download
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
 build: ## Build phpx binary
 	go build -o bin/phpx ./cmd/phpx
 
@@ -20,7 +24,7 @@ test: ## Run tests
 	go test ./...
 
 lint: ## Run linters
-	golangci-lint run
+	golangci-lint run --timeout 5m
 
 can-release: test lint ## CI gate - all checks
 
