@@ -15,6 +15,34 @@ phpx brings patterns established in other ecosystems to PHP - ephemeral tool exe
 
 ## Installation
 
+### Homebrew (Recommended)
+
+```bash
+brew install eddmann/tap/phpx
+```
+
+### Quick Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/eddmann/phpx/main/install.sh | sh
+```
+
+### Download Binary
+
+```bash
+# macOS (Apple Silicon)
+curl -L https://github.com/eddmann/phpx/releases/latest/download/phpx-macos-arm64 -o phpx
+chmod +x phpx && sudo mv phpx /usr/local/bin/
+
+# macOS (Intel)
+curl -L https://github.com/eddmann/phpx/releases/latest/download/phpx-macos-x64 -o phpx
+chmod +x phpx && sudo mv phpx /usr/local/bin/
+
+# Linux (x64)
+curl -L https://github.com/eddmann/phpx/releases/latest/download/phpx-linux-x64 -o phpx
+chmod +x phpx && sudo mv phpx /usr/local/bin/
+```
+
 ### From Source
 
 ```bash
@@ -189,7 +217,12 @@ Script → Parse metadata → Resolve PHP version → Download PHP (if needed)
                                               → Execute script
 ```
 
-**PHP binaries** are downloaded from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) - pre-built static PHP binaries with common extensions included.
+**PHP binaries** are downloaded from [static-php-cli](https://github.com/crazywhalecc/static-php-cli) - pre-built static PHP binaries with common extensions included. Two tiers are available:
+
+- **Common** - smaller download with standard extensions (curl, gd, redis, mysql, postgres, sqlite, xml, json, mbstring)
+- **Bulk** - larger download with additional extensions (imagick, intl, swoole, opcache, apcu, readline, xsl, event)
+
+The tier is selected automatically based on required extensions.
 
 **Dependencies** are installed via Composer into content-addressed cache directories at `~/.phpx/deps/{hash}/`.
 
