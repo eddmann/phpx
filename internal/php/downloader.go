@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/schollz/progressbar/v3"
 )
@@ -86,6 +87,17 @@ func Download(version, tier, destPath string, showProgress bool) error {
 	return nil
 }
 
+// isPathWithinDir checks if target path is safely within the base directory.
+// This prevents path traversal attacks where malicious tar entries could
+// write files outside the intended extraction directory.
+func isPathWithinDir(target, baseDir string) bool {
+	rel, err := filepath.Rel(baseDir, target)
+	if err != nil {
+		return false
+	}
+	return !strings.HasPrefix(rel, "..") && !filepath.IsAbs(rel)
+}
+
 func extractTarGz(r io.Reader, destDir string) error {
 	gzr, err := gzip.NewReader(r)
 	if err != nil {
@@ -105,6 +117,11 @@ func extractTarGz(r io.Reader, destDir string) error {
 		}
 
 		target := filepath.Join(destDir, header.Name)
+
+		// Prevent path traversal attacks
+		if !isPathWithinDir(target, destDir) {
+			return fmt.Errorf("invalid tar entry path: %s", header.Name)
+		}
 
 		switch header.Typeflag {
 		case tar.TypeDir:
@@ -131,6 +148,11 @@ func extractTarGz(r io.Reader, destDir string) error {
 		case tar.TypeSymlink:
 			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
 				return err
+			}
+			// Validate symlink target doesn't escape destination directory
+			linkTarget := filepath.Join(filepath.Dir(target), header.Linkname)
+			if !isPathWithinDir(linkTarget, destDir) {
+				return fmt.Errorf("invalid symlink target: %s -> %s", header.Name, header.Linkname)
 			}
 			if err := os.Symlink(header.Linkname, target); err != nil {
 				return err
