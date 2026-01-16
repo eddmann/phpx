@@ -21,7 +21,7 @@ func NormalizeConstraint(constraint string) string {
 	return strings.Join(parts, " || ")
 }
 
-const PackagistURL = "https://repo.packagist.org/p2/"
+const PackagistURL = "https://packagist.org/packages/"
 
 // PackageInfo contains information about a Composer package.
 type PackageInfo struct {
@@ -40,7 +40,10 @@ type PackageVersion struct {
 
 // packagistResponse is the raw API response structure.
 type packagistResponse struct {
-	Packages map[string][]PackageVersion `json:"packages"`
+	Package struct {
+		Name     string                    `json:"name"`
+		Versions map[string]PackageVersion `json:"versions"`
+	} `json:"package"`
 }
 
 // FetchPackage retrieves package information from Packagist.
@@ -66,9 +69,14 @@ func FetchPackage(name string) (*PackageInfo, error) {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	versions, ok := data.Packages[name]
-	if !ok {
+	if data.Package.Name == "" {
 		return nil, fmt.Errorf("package not found: %s", name)
+	}
+
+	// Convert map to slice
+	versions := make([]PackageVersion, 0, len(data.Package.Versions))
+	for _, v := range data.Package.Versions {
+		versions = append(versions, v)
 	}
 
 	return &PackageInfo{
