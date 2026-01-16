@@ -7,14 +7,11 @@ Go CLI tool (`phpx`) that runs PHP scripts with inline dependencies and executes
 ## Setup
 
 ```bash
-# Install dependencies
-go mod download
+# Install dependencies (Go modules + golangci-lint)
+make deps
 
 # Build binary
 make build
-
-# Install to ~/.local/bin (optional)
-make install
 ```
 
 ## Common Commands
