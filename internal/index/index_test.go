@@ -23,52 +23,52 @@ func TestMatchingVersion(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "returns_exact_version_when_specified",
+			name: "returns exact version when specified",
 			constraint: "8.3.10",
 			want:       "8.3.10",
 		},
 		{
-			name:       "returns_highest_matching_for_gte_constraint",
+			name: "returns highest matching for gte constraint",
 			constraint: ">=8.2",
 			want:       "8.4.17",
 		},
 		{
-			name:       "returns_highest_in_major_for_caret_constraint",
+			name: "returns highest in major for caret constraint",
 			constraint: "^8.3",
 			want:       "8.4.17",
 		},
 		{
-			name:       "returns_highest_patch_for_tilde_constraint",
+			name: "returns highest patch for tilde constraint",
 			constraint: "~8.3.0",
 			want:       "8.3.17",
 		},
 		{
-			name:       "returns_highest_in_range_for_compound_constraint",
+			name: "returns highest in range for compound constraint",
 			constraint: ">=8.2, <8.4",
 			want:       "8.3.17",
 		},
 		{
-			name:       "returns_error_when_no_version_matches",
+			name: "returns error when no version matches",
 			constraint: ">=9.0",
 			wantErr:    true,
 		},
 		{
-			name:       "returns_error_for_invalid_constraint_syntax",
+			name: "returns error for invalid constraint syntax",
 			constraint: "invalid",
 			wantErr:    true,
 		},
 		{
-			name:       "handles_single_pipe_or_constraint",
+			name: "handles single pipe or constraint",
 			constraint: "^7.4|^8.0",
 			want:       "8.4.17",
 		},
 		{
-			name:       "handles_double_pipe_or_constraint",
+			name: "handles double pipe or constraint",
 			constraint: "^7.4 || ^8.0",
 			want:       "8.4.17",
 		},
 		{
-			name:       "handles_multiple_or_branches",
+			name: "handles multiple or branches",
 			constraint: "^8.1|^8.2|^8.3|^8.4",
 			want:       "8.4.17",
 		},
@@ -97,7 +97,7 @@ func TestMatchingVersion(t *testing.T) {
 }
 
 func TestLatestVersion(t *testing.T) {
-	t.Run("returns_highest_version_from_list", func(t *testing.T) {
+	t.Run("returns highest version from list", func(t *testing.T) {
 		versions := []*semver.Version{
 			semver.MustParse("8.4.17"),
 			semver.MustParse("8.3.17"),
@@ -111,7 +111,7 @@ func TestLatestVersion(t *testing.T) {
 		}
 	})
 
-	t.Run("returns_nil_for_empty_list", func(t *testing.T) {
+	t.Run("returns nil for empty list", func(t *testing.T) {
 		got := LatestVersion(nil)
 
 		if got != nil {
@@ -133,22 +133,22 @@ func TestRequiredTier(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "returns_common_when_no_extensions_requested",
+			name: "returns common when no extensions requested",
 			extensions: nil,
 			want:       "common",
 		},
 		{
-			name:       "returns_common_when_all_extensions_in_common_tier",
+			name: "returns common when all extensions in common tier",
 			extensions: []string{"redis", "curl"},
 			want:       "common",
 		},
 		{
-			name:       "returns_bulk_when_any_extension_requires_bulk",
+			name: "returns bulk when any extension requires bulk",
 			extensions: []string{"redis", "imagick"},
 			want:       "bulk",
 		},
 		{
-			name:       "returns_error_when_extension_unavailable",
+			name: "returns error when extension unavailable",
 			extensions: []string{"mongodb"},
 			wantErr:    true,
 		},
@@ -191,22 +191,22 @@ func TestSelectComposer(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "returns_latest_composer_for_modern_php",
+			name: "returns latest composer for modern php",
 			phpVersion: "8.4.17",
 			want:       "2.9.3",
 		},
 		{
-			name:       "returns_latest_composer_at_exact_minimum_php",
+			name: "returns latest composer at exact minimum php",
 			phpVersion: "7.2.5",
 			want:       "2.9.3",
 		},
 		{
-			name:       "returns_older_composer_for_older_php",
+			name: "returns older composer for older php",
 			phpVersion: "7.0.0",
 			want:       "2.2.26",
 		},
 		{
-			name:       "returns_error_when_php_too_old",
+			name: "returns error when php too old",
 			phpVersion: "5.2.0",
 			wantErr:    true,
 		},
@@ -235,7 +235,7 @@ func TestSelectComposer(t *testing.T) {
 }
 
 func TestOsName(t *testing.T) {
-	t.Run("returns_valid_os_name", func(t *testing.T) {
+	t.Run("returns valid os name", func(t *testing.T) {
 		name := osName()
 
 		if name == "" {
@@ -245,7 +245,7 @@ func TestOsName(t *testing.T) {
 }
 
 func TestArchName(t *testing.T) {
-	t.Run("returns_valid_arch_name", func(t *testing.T) {
+	t.Run("returns valid arch name", func(t *testing.T) {
 		name := archName()
 
 		if name == "" {

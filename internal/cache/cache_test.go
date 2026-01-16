@@ -8,7 +8,7 @@ import (
 )
 
 func TestDir(t *testing.T) {
-	t.Run("returns_path_ending_with_phpx", func(t *testing.T) {
+	t.Run("returns path ending with phpx", func(t *testing.T) {
 		dir, err := Dir()
 
 		if err != nil {
@@ -22,7 +22,7 @@ func TestDir(t *testing.T) {
 }
 
 func TestPHPPath(t *testing.T) {
-	t.Run("returns_path_containing_version_and_tier", func(t *testing.T) {
+	t.Run("returns path containing version and tier", func(t *testing.T) {
 		path, err := PHPPath("8.4.17", "common")
 
 		if err != nil {
@@ -34,7 +34,7 @@ func TestPHPPath(t *testing.T) {
 		}
 	})
 
-	t.Run("returns_path_ending_with_bin_php", func(t *testing.T) {
+	t.Run("returns path ending with bin php", func(t *testing.T) {
 		path, err := PHPPath("8.4.17", "common")
 
 		if err != nil {
@@ -48,7 +48,7 @@ func TestPHPPath(t *testing.T) {
 }
 
 func TestToolPath(t *testing.T) {
-	t.Run("converts_slashes_to_dashes_in_package_name", func(t *testing.T) {
+	t.Run("converts slashes to dashes in package name", func(t *testing.T) {
 		path, err := ToolPath("phpstan/phpstan", "1.10.0")
 
 		if err != nil {
@@ -60,7 +60,7 @@ func TestToolPath(t *testing.T) {
 		}
 	})
 
-	t.Run("includes_package_and_version_in_path", func(t *testing.T) {
+	t.Run("includes package and version in path", func(t *testing.T) {
 		path, err := ToolPath("phpstan/phpstan", "1.10.0")
 
 		if err != nil {
@@ -81,25 +81,25 @@ func TestDepsHash(t *testing.T) {
 		compare  []string
 	}{
 		{
-			name:     "produces_deterministic_hash",
+			name: "produces deterministic hash",
 			packages: []string{"vendor/a:^1.0", "vendor/b:^2.0"},
 			wantSame: true,
 			compare:  []string{"vendor/a:^1.0", "vendor/b:^2.0"},
 		},
 		{
-			name:     "produces_same_hash_regardless_of_order",
+			name: "produces same hash regardless of order",
 			packages: []string{"vendor/b:^2.0", "vendor/a:^1.0"},
 			wantSame: true,
 			compare:  []string{"vendor/a:^1.0", "vendor/b:^2.0"},
 		},
 		{
-			name:     "produces_same_hash_regardless_of_case",
+			name: "produces same hash regardless of case",
 			packages: []string{"Vendor/A:^1.0"},
 			wantSame: true,
 			compare:  []string{"vendor/a:^1.0"},
 		},
 		{
-			name:     "produces_different_hash_for_different_packages",
+			name: "produces different hash for different packages",
 			packages: []string{"vendor/a:^1.0"},
 			wantSame: false,
 			compare:  []string{"vendor/b:^1.0"},
@@ -123,7 +123,7 @@ func TestDepsHash(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
-	t.Run("returns_true_for_existing_file", func(t *testing.T) {
+	t.Run("returns true for existing file", func(t *testing.T) {
 		tmpFile, err := os.CreateTemp("", "test")
 		if err != nil {
 			t.Fatalf("CreateTemp() error: %v", err)
@@ -138,7 +138,7 @@ func TestExists(t *testing.T) {
 		}
 	})
 
-	t.Run("returns_false_for_nonexistent_file", func(t *testing.T) {
+	t.Run("returns false for nonexistent file", func(t *testing.T) {
 		got := Exists("/nonexistent/path/file")
 
 		if got {
@@ -148,7 +148,7 @@ func TestExists(t *testing.T) {
 }
 
 func TestEnsureDir(t *testing.T) {
-	t.Run("creates_nested_directories", func(t *testing.T) {
+	t.Run("creates nested directories", func(t *testing.T) {
 		tmpDir, err := os.MkdirTemp("", "test")
 		if err != nil {
 			t.Fatalf("MkdirTemp() error: %v", err)
@@ -168,7 +168,7 @@ func TestEnsureDir(t *testing.T) {
 		}
 	})
 
-	t.Run("succeeds_when_directory_already_exists", func(t *testing.T) {
+	t.Run("succeeds when directory already exists", func(t *testing.T) {
 		tmpDir, err := os.MkdirTemp("", "test")
 		if err != nil {
 			t.Fatalf("MkdirTemp() error: %v", err)

@@ -24,37 +24,37 @@ func TestResolveVersion(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "returns_latest_stable_when_no_constraint",
+			name: "returns latest stable when no constraint",
 			constraint: "",
 			want:       "2.0.0",
 		},
 		{
-			name:       "returns_exact_version_when_specified",
+			name: "returns exact version when specified",
 			constraint: "1.10.0",
 			want:       "1.10.0",
 		},
 		{
-			name:       "returns_highest_matching_for_caret_constraint",
+			name: "returns highest matching for caret constraint",
 			constraint: "^1.9",
 			want:       "1.10.5",
 		},
 		{
-			name:       "returns_highest_patch_for_tilde_constraint",
+			name: "returns highest patch for tilde constraint",
 			constraint: "~1.10.0",
 			want:       "1.10.5",
 		},
 		{
-			name:       "returns_error_when_no_version_matches",
+			name: "returns error when no version matches",
 			constraint: ">=3.0",
 			wantErr:    true,
 		},
 		{
-			name:       "skips_prerelease_versions_for_stable_constraint",
+			name: "skips prerelease versions for stable constraint",
 			constraint: "^1.0",
 			want:       "1.10.5",
 		},
 		{
-			name:       "skips_dev_branches_for_stable_constraint",
+			name: "skips dev branches for stable constraint",
 			constraint: "^2.0",
 			want:       "2.0.0",
 		},
@@ -100,17 +100,17 @@ func TestResolveVersion_with_or_constraints(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "matches_highest_from_multiple_branches_with_single_pipe",
+			name: "matches highest from multiple branches with single pipe",
 			constraint: "^1.0|^2.0",
 			want:       "2.1.0",
 		},
 		{
-			name:       "matches_highest_from_multiple_branches_with_double_pipe",
+			name: "matches highest from multiple branches with double pipe",
 			constraint: "^1.0 || ^2.0",
 			want:       "2.1.0",
 		},
 		{
-			name:       "falls_back_to_first_branch_when_second_has_no_match",
+			name: "falls back to first branch when second has no match",
 			constraint: "^1.0|^3.0",
 			want:       "1.5.0",
 		},
@@ -148,38 +148,38 @@ func TestInferBinary(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "returns_single_binary_basename",
+			name: "returns single binary basename",
 			pkg:  "vendor/tool",
 			bins: []string{"bin/tool"},
 			want: "tool",
 		},
 		{
-			name:     "uses_from_flag_when_provided",
+			name: "uses from flag when provided",
 			pkg:      "vendor/tool",
 			bins:     []string{"bin/other"},
 			fromFlag: "custom",
 			want:     "custom",
 		},
 		{
-			name: "matches_binary_to_package_short_name",
+			name: "matches binary to package short name",
 			pkg:  "phpstan/phpstan",
 			bins: []string{"phpstan", "phpstan.phar"},
 			want: "phpstan",
 		},
 		{
-			name: "matches_phar_binary_to_package_short_name",
+			name: "matches phar binary to package short name",
 			pkg:  "phpstan/phpstan",
 			bins: []string{"phpstan.phar", "other"},
 			want: "phpstan.phar",
 		},
 		{
-			name: "returns_first_binary_when_no_name_match",
+			name: "returns first binary when no name match",
 			pkg:  "vendor/package",
 			bins: []string{"first", "second"},
 			want: "first",
 		},
 		{
-			name:    "returns_error_when_no_binaries_declared",
+			name: "returns error when no binaries declared",
 			pkg:     "vendor/library",
 			bins:    nil,
 			wantErr: true,
@@ -215,22 +215,22 @@ func TestResolveAlias(t *testing.T) {
 		want  string
 	}{
 		{
-			name:  "expands_phpstan_alias",
+			name: "expands phpstan alias",
 			input: "phpstan",
 			want:  "phpstan/phpstan",
 		},
 		{
-			name:  "expands_psalm_alias",
+			name: "expands psalm alias",
 			input: "psalm",
 			want:  "vimeo/psalm",
 		},
 		{
-			name:  "preserves_full_package_name",
+			name: "preserves full package name",
 			input: "vendor/package",
 			want:  "vendor/package",
 		},
 		{
-			name:  "preserves_unknown_short_name",
+			name: "preserves unknown short name",
 			input: "unknown",
 			want:  "unknown",
 		},
@@ -255,25 +255,25 @@ func TestParseToolArg(t *testing.T) {
 		wantVersion string
 	}{
 		{
-			name:        "parses_package_name_only",
+			name: "parses package name only",
 			arg:         "phpstan",
 			wantPkg:     "phpstan",
 			wantVersion: "",
 		},
 		{
-			name:        "parses_package_with_at_version",
+			name: "parses package with at version",
 			arg:         "phpstan@1.10.0",
 			wantPkg:     "phpstan",
 			wantVersion: "1.10.0",
 		},
 		{
-			name:        "parses_package_with_colon_constraint",
+			name: "parses package with colon constraint",
 			arg:         "phpstan:^1.10",
 			wantPkg:     "phpstan",
 			wantVersion: "^1.10",
 		},
 		{
-			name:        "parses_full_package_name_with_version",
+			name: "parses full package name with version",
 			arg:         "vendor/package@2.0",
 			wantPkg:     "vendor/package",
 			wantVersion: "2.0",
@@ -302,37 +302,37 @@ func TestNormalizeConstraint(t *testing.T) {
 		want  string
 	}{
 		{
-			name:  "converts_single_pipe_to_double_pipe",
+			name: "converts single pipe to double pipe",
 			input: "^7.4|^8.0",
 			want:  "^7.4 || ^8.0",
 		},
 		{
-			name:  "preserves_existing_double_pipes",
+			name: "preserves existing double pipes",
 			input: "^7.4 || ^8.0",
 			want:  "^7.4  ||  ^8.0",
 		},
 		{
-			name:  "returns_constraint_unchanged_when_no_or",
+			name: "returns constraint unchanged when no or",
 			input: "^8.0",
 			want:  "^8.0",
 		},
 		{
-			name:  "returns_range_constraint_unchanged",
+			name: "returns range constraint unchanged",
 			input: ">=8.1",
 			want:  ">=8.1",
 		},
 		{
-			name:  "handles_complex_or_with_and_constraints",
+			name: "handles complex or with and constraints",
 			input: ">=7.2,<8.0|>=8.0,<9.0",
 			want:  ">=7.2,<8.0 || >=8.0,<9.0",
 		},
 		{
-			name:  "handles_multiple_or_branches",
+			name: "handles multiple or branches",
 			input: "^7.2|^7.3|^7.4|^8.0",
 			want:  "^7.2 || ^7.3 || ^7.4 || ^8.0",
 		},
 		{
-			name:  "handles_spaces_around_single_pipe",
+			name: "handles spaces around single pipe",
 			input: "^7.4 | ^8.0",
 			want:  "^7.4  ||  ^8.0",
 		},
