@@ -48,7 +48,7 @@ chmod +x phpx && sudo mv phpx /usr/local/bin/
 ```bash
 git clone https://github.com/eddmann/phpx
 cd phpx
-make build
+make build-release VERSION=0.1.0
 make install  # Installs to ~/.local/bin
 ```
 
@@ -262,10 +262,11 @@ The tier is selected automatically based on required extensions.
 ```bash
 git clone https://github.com/eddmann/phpx
 cd phpx
-make test       # Run tests
-make lint       # Run linters
-make build      # Build binary
-make install    # Install to ~/.local/bin
+make test                           # Run tests
+make lint                           # Run linters
+make build                          # Build binary (dev, with debug symbols)
+make build-release VERSION=x.x.x    # Build binary (release, optimized)
+make install                        # Install to ~/.local/bin
 ```
 
 ## Credits

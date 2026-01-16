@@ -3,14 +3,25 @@
 
 SHELL := /bin/bash
 
+VERSION ?= dev
+GIT_COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BUILD_TIME := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+LDFLAGS := -s -w \
+	-X github.com/eddmann/phpx/internal/cli.Version=$(VERSION) \
+	-X github.com/eddmann/phpx/internal/cli.GitCommit=$(GIT_COMMIT) \
+	-X github.com/eddmann/phpx/internal/cli.BuildTime=$(BUILD_TIME)
+
 ##@ Development
 
 deps: ## Install dependencies and tools
 	go mod download
 	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 
-build: ## Build phpx binary
+build: ## Build phpx binary (development)
 	go build -o bin/phpx ./cmd/phpx
+
+build-release: ## Build phpx binary (release, optimized)
+	CGO_ENABLED=0 go build -trimpath -ldflags="$(LDFLAGS)" -o bin/phpx ./cmd/phpx
 
 install: build ## Install to ~/.local/bin
 	cp bin/phpx ~/.local/bin/
