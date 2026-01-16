@@ -23,39 +23,54 @@ func TestMatchingVersion(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "exact version",
+			name:       "returns_exact_version_when_specified",
 			constraint: "8.3.10",
 			want:       "8.3.10",
 		},
 		{
-			name:       "greater than or equal",
+			name:       "returns_highest_matching_for_gte_constraint",
 			constraint: ">=8.2",
 			want:       "8.4.17",
 		},
 		{
-			name:       "caret constraint",
+			name:       "returns_highest_in_major_for_caret_constraint",
 			constraint: "^8.3",
-			want:       "8.4.17", // ^8.3 means >=8.3.0, <9.0.0
+			want:       "8.4.17",
 		},
 		{
-			name:       "tilde constraint",
+			name:       "returns_highest_patch_for_tilde_constraint",
 			constraint: "~8.3.0",
 			want:       "8.3.17",
 		},
 		{
-			name:       "range constraint",
+			name:       "returns_highest_in_range_for_compound_constraint",
 			constraint: ">=8.2, <8.4",
 			want:       "8.3.17",
 		},
 		{
-			name:       "no match",
+			name:       "returns_error_when_no_version_matches",
 			constraint: ">=9.0",
 			wantErr:    true,
 		},
 		{
-			name:       "invalid constraint",
+			name:       "returns_error_for_invalid_constraint_syntax",
 			constraint: "invalid",
 			wantErr:    true,
+		},
+		{
+			name:       "handles_single_pipe_or_constraint",
+			constraint: "^7.4|^8.0",
+			want:       "8.4.17",
+		},
+		{
+			name:       "handles_double_pipe_or_constraint",
+			constraint: "^7.4 || ^8.0",
+			want:       "8.4.17",
+		},
+		{
+			name:       "handles_multiple_or_branches",
+			constraint: "^8.1|^8.2|^8.3|^8.4",
+			want:       "8.4.17",
 		},
 	}
 
@@ -75,27 +90,34 @@ func TestMatchingVersion(t *testing.T) {
 			}
 
 			if got.String() != tt.want {
-				t.Errorf("MatchingVersion() = %s, want %s", got.String(), tt.want)
+				t.Errorf("got %s, want %s", got.String(), tt.want)
 			}
 		})
 	}
 }
 
 func TestLatestVersion(t *testing.T) {
-	versions := []*semver.Version{
-		semver.MustParse("8.4.17"),
-		semver.MustParse("8.3.17"),
-		semver.MustParse("8.2.27"),
-	}
+	t.Run("returns_highest_version_from_list", func(t *testing.T) {
+		versions := []*semver.Version{
+			semver.MustParse("8.4.17"),
+			semver.MustParse("8.3.17"),
+			semver.MustParse("8.2.27"),
+		}
 
-	got := LatestVersion(versions)
-	if got.String() != "8.4.17" {
-		t.Errorf("LatestVersion() = %s, want 8.4.17", got.String())
-	}
+		got := LatestVersion(versions)
 
-	if LatestVersion(nil) != nil {
-		t.Error("LatestVersion(nil) should return nil")
-	}
+		if got.String() != "8.4.17" {
+			t.Errorf("got %s, want 8.4.17", got.String())
+		}
+	})
+
+	t.Run("returns_nil_for_empty_list", func(t *testing.T) {
+		got := LatestVersion(nil)
+
+		if got != nil {
+			t.Errorf("got %v, want nil", got)
+		}
+	})
 }
 
 func TestRequiredTier(t *testing.T) {
@@ -111,22 +133,22 @@ func TestRequiredTier(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "no extensions",
+			name:       "returns_common_when_no_extensions_requested",
 			extensions: nil,
 			want:       "common",
 		},
 		{
-			name:       "common only",
+			name:       "returns_common_when_all_extensions_in_common_tier",
 			extensions: []string{"redis", "curl"},
 			want:       "common",
 		},
 		{
-			name:       "needs bulk",
+			name:       "returns_bulk_when_any_extension_requires_bulk",
 			extensions: []string{"redis", "imagick"},
 			want:       "bulk",
 		},
 		{
-			name:       "unavailable extension",
+			name:       "returns_error_when_extension_unavailable",
 			extensions: []string{"mongodb"},
 			wantErr:    true,
 		},
@@ -148,7 +170,7 @@ func TestRequiredTier(t *testing.T) {
 			}
 
 			if got != tt.want {
-				t.Errorf("RequiredTier() = %s, want %s", got, tt.want)
+				t.Errorf("got %s, want %s", got, tt.want)
 			}
 		})
 	}
@@ -169,22 +191,22 @@ func TestSelectComposer(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name:       "PHP 8.4",
+			name:       "returns_latest_composer_for_modern_php",
 			phpVersion: "8.4.17",
 			want:       "2.9.3",
 		},
 		{
-			name:       "PHP 7.2.5 exact minimum",
+			name:       "returns_latest_composer_at_exact_minimum_php",
 			phpVersion: "7.2.5",
 			want:       "2.9.3",
 		},
 		{
-			name:       "PHP 7.0 falls back to 2.2",
+			name:       "returns_older_composer_for_older_php",
 			phpVersion: "7.0.0",
 			want:       "2.2.26",
 		},
 		{
-			name:       "PHP 5.2 too old",
+			name:       "returns_error_when_php_too_old",
 			phpVersion: "5.2.0",
 			wantErr:    true,
 		},
@@ -206,30 +228,28 @@ func TestSelectComposer(t *testing.T) {
 			}
 
 			if got.Version != tt.want {
-				t.Errorf("SelectComposer() = %s, want %s", got.Version, tt.want)
+				t.Errorf("got %s, want %s", got.Version, tt.want)
 			}
 		})
 	}
 }
 
 func TestOsName(t *testing.T) {
-	name := osName()
-	// Should return either "macos" or "linux" on common platforms
-	if name != "macos" && name != "linux" {
-		// Just verify it returns something
+	t.Run("returns_valid_os_name", func(t *testing.T) {
+		name := osName()
+
 		if name == "" {
-			t.Error("osName() returned empty string")
+			t.Error("got empty string, want valid os name")
 		}
-	}
+	})
 }
 
 func TestArchName(t *testing.T) {
-	name := archName()
-	// Should return x86_64 or aarch64 on common platforms
-	if name != "x86_64" && name != "aarch64" {
-		// Just verify it returns something
+	t.Run("returns_valid_arch_name", func(t *testing.T) {
+		name := archName()
+
 		if name == "" {
-			t.Error("archName() returned empty string")
+			t.Error("got empty string, want valid arch name")
 		}
-	}
+	})
 }

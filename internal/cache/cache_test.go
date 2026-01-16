@@ -8,45 +8,69 @@ import (
 )
 
 func TestDir(t *testing.T) {
-	dir, err := Dir()
-	if err != nil {
-		t.Fatalf("Dir() error: %v", err)
-	}
+	t.Run("returns_path_ending_with_phpx", func(t *testing.T) {
+		dir, err := Dir()
 
-	if !strings.HasSuffix(dir, ".phpx") {
-		t.Errorf("Dir() = %q, want suffix .phpx", dir)
-	}
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if !strings.HasSuffix(dir, ".phpx") {
+			t.Errorf("got %q, want suffix .phpx", dir)
+		}
+	})
 }
 
 func TestPHPPath(t *testing.T) {
-	path, err := PHPPath("8.4.17", "common")
-	if err != nil {
-		t.Fatalf("PHPPath() error: %v", err)
-	}
+	t.Run("returns_path_containing_version_and_tier", func(t *testing.T) {
+		path, err := PHPPath("8.4.17", "common")
 
-	if !strings.Contains(path, "8.4.17-common") {
-		t.Errorf("PHPPath() = %q, want to contain 8.4.17-common", path)
-	}
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 
-	if !strings.HasSuffix(path, filepath.Join("bin", "php")) {
-		t.Errorf("PHPPath() = %q, want suffix bin/php", path)
-	}
+		if !strings.Contains(path, "8.4.17-common") {
+			t.Errorf("got %q, want to contain 8.4.17-common", path)
+		}
+	})
+
+	t.Run("returns_path_ending_with_bin_php", func(t *testing.T) {
+		path, err := PHPPath("8.4.17", "common")
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if !strings.HasSuffix(path, filepath.Join("bin", "php")) {
+			t.Errorf("got %q, want suffix bin/php", path)
+		}
+	})
 }
 
 func TestToolPath(t *testing.T) {
-	path, err := ToolPath("phpstan/phpstan", "1.10.0")
-	if err != nil {
-		t.Fatalf("ToolPath() error: %v", err)
-	}
+	t.Run("converts_slashes_to_dashes_in_package_name", func(t *testing.T) {
+		path, err := ToolPath("phpstan/phpstan", "1.10.0")
 
-	// Should convert / to -
-	if strings.Contains(path, "phpstan/phpstan") {
-		t.Errorf("ToolPath() = %q, should not contain /", path)
-	}
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
 
-	if !strings.Contains(path, "phpstan-phpstan-1.10.0") {
-		t.Errorf("ToolPath() = %q, want to contain phpstan-phpstan-1.10.0", path)
-	}
+		if strings.Contains(path, "phpstan/phpstan") {
+			t.Errorf("got %q, should not contain /", path)
+		}
+	})
+
+	t.Run("includes_package_and_version_in_path", func(t *testing.T) {
+		path, err := ToolPath("phpstan/phpstan", "1.10.0")
+
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if !strings.Contains(path, "phpstan-phpstan-1.10.0") {
+			t.Errorf("got %q, want to contain phpstan-phpstan-1.10.0", path)
+		}
+	})
 }
 
 func TestDepsHash(t *testing.T) {
@@ -57,25 +81,25 @@ func TestDepsHash(t *testing.T) {
 		compare  []string
 	}{
 		{
-			name:     "deterministic",
+			name:     "produces_deterministic_hash",
 			packages: []string{"vendor/a:^1.0", "vendor/b:^2.0"},
 			wantSame: true,
 			compare:  []string{"vendor/a:^1.0", "vendor/b:^2.0"},
 		},
 		{
-			name:     "order independent",
+			name:     "produces_same_hash_regardless_of_order",
 			packages: []string{"vendor/b:^2.0", "vendor/a:^1.0"},
 			wantSame: true,
 			compare:  []string{"vendor/a:^1.0", "vendor/b:^2.0"},
 		},
 		{
-			name:     "case insensitive",
+			name:     "produces_same_hash_regardless_of_case",
 			packages: []string{"Vendor/A:^1.0"},
 			wantSame: true,
 			compare:  []string{"vendor/a:^1.0"},
 		},
 		{
-			name:     "different packages",
+			name:     "produces_different_hash_for_different_packages",
 			packages: []string{"vendor/a:^1.0"},
 			wantSame: false,
 			compare:  []string{"vendor/b:^1.0"},
@@ -99,42 +123,62 @@ func TestDepsHash(t *testing.T) {
 }
 
 func TestExists(t *testing.T) {
-	// Test existing file
-	tmpFile, err := os.CreateTemp("", "test")
-	if err != nil {
-		t.Fatalf("CreateTemp() error: %v", err)
-	}
-	defer os.Remove(tmpFile.Name())
-	tmpFile.Close()
+	t.Run("returns_true_for_existing_file", func(t *testing.T) {
+		tmpFile, err := os.CreateTemp("", "test")
+		if err != nil {
+			t.Fatalf("CreateTemp() error: %v", err)
+		}
+		defer os.Remove(tmpFile.Name())
+		tmpFile.Close()
 
-	if !Exists(tmpFile.Name()) {
-		t.Error("Exists() = false for existing file")
-	}
+		got := Exists(tmpFile.Name())
 
-	// Test non-existing file
-	if Exists("/nonexistent/path/file") {
-		t.Error("Exists() = true for non-existing file")
-	}
+		if !got {
+			t.Error("got false, want true")
+		}
+	})
+
+	t.Run("returns_false_for_nonexistent_file", func(t *testing.T) {
+		got := Exists("/nonexistent/path/file")
+
+		if got {
+			t.Error("got true, want false")
+		}
+	})
 }
 
 func TestEnsureDir(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "test")
-	if err != nil {
-		t.Fatalf("MkdirTemp() error: %v", err)
-	}
-	defer os.RemoveAll(tmpDir)
+	t.Run("creates_nested_directories", func(t *testing.T) {
+		tmpDir, err := os.MkdirTemp("", "test")
+		if err != nil {
+			t.Fatalf("MkdirTemp() error: %v", err)
+		}
+		defer os.RemoveAll(tmpDir)
 
-	newDir := filepath.Join(tmpDir, "a", "b", "c")
-	if err := EnsureDir(newDir); err != nil {
-		t.Fatalf("EnsureDir() error: %v", err)
-	}
+		newDir := filepath.Join(tmpDir, "a", "b", "c")
 
-	if !Exists(newDir) {
-		t.Error("EnsureDir() did not create directory")
-	}
+		err = EnsureDir(newDir)
 
-	// Should not error on existing dir
-	if err := EnsureDir(newDir); err != nil {
-		t.Errorf("EnsureDir() on existing dir error: %v", err)
-	}
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if !Exists(newDir) {
+			t.Error("directory was not created")
+		}
+	})
+
+	t.Run("succeeds_when_directory_already_exists", func(t *testing.T) {
+		tmpDir, err := os.MkdirTemp("", "test")
+		if err != nil {
+			t.Fatalf("MkdirTemp() error: %v", err)
+		}
+		defer os.RemoveAll(tmpDir)
+
+		err = EnsureDir(tmpDir)
+
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+	})
 }

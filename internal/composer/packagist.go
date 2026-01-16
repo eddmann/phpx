@@ -9,6 +9,18 @@ import (
 	"github.com/Masterminds/semver/v3"
 )
 
+// NormalizeConstraint converts Composer-style constraints to semver-compatible format.
+// Composer uses single pipe (|) for OR, semver uses double pipe (||).
+func NormalizeConstraint(constraint string) string {
+	// Split on || first to preserve already-correct double pipes
+	parts := strings.Split(constraint, "||")
+	for i, part := range parts {
+		// Replace remaining single | with ||
+		parts[i] = strings.ReplaceAll(part, "|", " || ")
+	}
+	return strings.Join(parts, " || ")
+}
+
 const PackagistURL = "https://repo.packagist.org/p2/"
 
 // PackageInfo contains information about a Composer package.
@@ -72,7 +84,8 @@ func ResolveVersion(pkg *PackageInfo, constraint string) (*PackageVersion, error
 		return latestStable(pkg.Versions)
 	}
 
-	c, err := semver.NewConstraint(constraint)
+	normalized := NormalizeConstraint(constraint)
+	c, err := semver.NewConstraint(normalized)
 	if err != nil {
 		return nil, fmt.Errorf("invalid constraint %q: %w", constraint, err)
 	}

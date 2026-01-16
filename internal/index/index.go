@@ -15,6 +15,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/phpx-dev/phpx/internal/cache"
+	"github.com/phpx-dev/phpx/internal/composer"
 )
 
 const (
@@ -362,7 +363,8 @@ func LatestVersion(versions []*semver.Version) *semver.Version {
 
 // MatchingVersion returns the highest version satisfying a constraint.
 func MatchingVersion(versions []*semver.Version, constraint string) (*semver.Version, error) {
-	c, err := semver.NewConstraint(constraint)
+	normalized := composer.NormalizeConstraint(constraint)
+	c, err := semver.NewConstraint(normalized)
 	if err != nil {
 		return nil, fmt.Errorf("invalid constraint %q: %w", constraint, err)
 	}

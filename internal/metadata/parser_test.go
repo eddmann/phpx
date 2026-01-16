@@ -14,7 +14,7 @@ func TestParse(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name: "full metadata block",
+			name: "parses_full_metadata_block",
 			content: `<?php
 // phpx
 // php = ">=8.2"
@@ -28,7 +28,7 @@ echo "Hello";
 			wantExts: []string{"redis", "gd"},
 		},
 		{
-			name: "php version only",
+			name: "parses_php_version_only",
 			content: `<?php
 // phpx
 // php = "^8.3"
@@ -40,7 +40,7 @@ echo "Hello";
 			wantExts: nil,
 		},
 		{
-			name: "packages only",
+			name: "parses_packages_only",
 			content: `<?php
 // phpx
 // packages = ["nesbot/carbon:^3.0"]
@@ -52,14 +52,14 @@ use Carbon\Carbon;
 			wantExts: nil,
 		},
 		{
-			name:     "no metadata block",
+			name:     "returns_empty_metadata_when_no_phpx_block",
 			content:  `<?php echo "Hello";`,
 			wantPHP:  "",
 			wantPkgs: nil,
 			wantExts: nil,
 		},
 		{
-			name: "empty phpx block",
+			name: "returns_empty_metadata_for_empty_phpx_block",
 			content: `<?php
 // phpx
 
@@ -70,7 +70,7 @@ echo "Hello";
 			wantExts: nil,
 		},
 		{
-			name: "stops at non-comment line",
+			name: "stops_parsing_at_non_comment_line",
 			content: `<?php
 // phpx
 // php = ">=8.2"
@@ -82,7 +82,7 @@ $x = 1;
 			wantExts: nil,
 		},
 		{
-			name: "invalid TOML",
+			name: "returns_error_for_invalid_toml",
 			content: `<?php
 // phpx
 // php = invalid
@@ -90,7 +90,7 @@ $x = 1;
 			wantErr: true,
 		},
 		{
-			name: "whitespace variations",
+			name: "handles_whitespace_variations",
 			content: `<?php
 // phpx
 //php = ">=8.1"

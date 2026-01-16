@@ -35,7 +35,6 @@ func RunTool(phpPath, toolDir, binary string, args []string) (int, error) {
 	cmdArgs = append(cmdArgs, args...)
 
 	cmd := exec.Command(phpPath, cmdArgs...)
-	cmd.Dir = toolDir
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
