@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/phpx-dev/phpx/internal/cli"
+	"github.com/eddmann/phpx/internal/cli"
 )
 
 func main() {

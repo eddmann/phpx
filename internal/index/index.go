@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/phpx-dev/phpx/internal/cache"
-	"github.com/phpx-dev/phpx/internal/composer"
+	"github.com/eddmann/phpx/internal/cache"
+	"github.com/eddmann/phpx/internal/composer"
 )
 
 const (

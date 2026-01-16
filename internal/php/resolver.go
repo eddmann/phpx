@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/phpx-dev/phpx/internal/cache"
-	"github.com/phpx-dev/phpx/internal/index"
+	"github.com/eddmann/phpx/internal/cache"
+	"github.com/eddmann/phpx/internal/index"
 )
 
 // Resolution contains the result of resolving a PHP requirement.

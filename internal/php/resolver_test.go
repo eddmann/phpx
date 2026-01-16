@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/phpx-dev/phpx/internal/index"
+	"github.com/eddmann/phpx/internal/index"
 )
 
 func TestResolve(t *testing.T) {

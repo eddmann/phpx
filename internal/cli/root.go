@@ -10,8 +10,9 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "phpx",
-	Short: "Run PHP scripts with inline dependencies",
+	Use:     "phpx",
+	Short:   "Run PHP scripts with inline dependencies",
+	Version: Version,
 	Long: `phpx runs PHP scripts with inline Composer dependencies and
 executes Composer tools ephemerally.
 

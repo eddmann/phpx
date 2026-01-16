@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/phpx-dev/phpx/internal/cache"
+	"github.com/eddmann/phpx/internal/cache"
 )
 
 // composerJSON is the structure for composer.json.

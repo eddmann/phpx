@@ -24,6 +24,12 @@ lint: ## Run linters
 
 can-release: test lint ## CI gate - all checks
 
+##@ Utilities
+
+set-version: ## Set version (VERSION=x.x.x)
+	@if [ -z "$(VERSION)" ]; then echo "Usage: make set-version VERSION=x.x.x"; exit 1; fi
+	sed -i.bak 's/var Version = "[^"]*"/var Version = "$(VERSION)"/' internal/cli/version.go && rm internal/cli/version.go.bak
+
 ##@ Help
 
 help:

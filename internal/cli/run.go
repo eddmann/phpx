@@ -7,12 +7,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/phpx-dev/phpx/internal/cache"
-	"github.com/phpx-dev/phpx/internal/composer"
-	"github.com/phpx-dev/phpx/internal/exec"
-	"github.com/phpx-dev/phpx/internal/index"
-	"github.com/phpx-dev/phpx/internal/metadata"
-	"github.com/phpx-dev/phpx/internal/php"
+	"github.com/eddmann/phpx/internal/cache"
+	"github.com/eddmann/phpx/internal/composer"
+	"github.com/eddmann/phpx/internal/exec"
+	"github.com/eddmann/phpx/internal/index"
+	"github.com/eddmann/phpx/internal/metadata"
+	"github.com/eddmann/phpx/internal/php"
 	"github.com/spf13/cobra"
 )
 
