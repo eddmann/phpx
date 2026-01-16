@@ -67,14 +67,14 @@ phpx script.php
 // phpx
 // packages = ["nesbot/carbon:^3.0"]
 
-echo Carbon\Carbon::now()->diffForHumans();
+echo \Carbon\Carbon::parse('next friday')->diffForHumans();
 ```
 
 **3. Run it**
 
 ```bash
 phpx script.php
-# 2 minutes ago
+# 6 days from now
 ```
 
 **4. Run a tool without installing it**
