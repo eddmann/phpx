@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>phpx - Run PHP scripts with inline dependencies</title>
-    <meta name="description" content="phpx brings modern patterns to PHP - run scripts with inline dependencies, execute Composer tools without global installation. Like npx and uvx for PHP.">
-    <meta name="keywords" content="PHP, CLI, phpx, Composer, inline dependencies, npx, uvx, uv, developer tools, static PHP">
-    <meta name="author" content="Edd Mann">
-    <meta name="theme-color" content="#1a0a2e">
-    <link rel="canonical" href="https://eddmann.github.io/phpx/">
+    <meta
+      name="description"
+      content="phpx brings modern patterns to PHP - run scripts with inline dependencies, execute Composer tools without global installation. Like npx and uvx for PHP."
+    />
+    <meta
+      name="keywords"
+      content="PHP, CLI, phpx, Composer, inline dependencies, npx, uvx, uv, developer tools, static PHP"
+    />
+    <meta name="author" content="Edd Mann" />
+    <meta name="theme-color" content="#1a0a2e" />
+    <link rel="canonical" href="https://eddmann.github.io/phpx/" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="logo.png" />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="phpx - Run PHP scripts with inline dependencies">
-    <meta property="og:description" content="phpx brings modern patterns to PHP - run scripts with inline dependencies, execute Composer tools without global installation. Like npx and uvx for PHP.">
-    <meta property="og:image" content="https://eddmann.github.io/phpx/logo.png">
-    <meta property="og:url" content="https://eddmann.github.io/phpx/">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="phpx">
+    <meta
+      property="og:title"
+      content="phpx - Run PHP scripts with inline dependencies"
+    />
+    <meta
+      property="og:description"
+      content="phpx brings modern patterns to PHP - run scripts with inline dependencies, execute Composer tools without global installation. Like npx and uvx for PHP."
+    />
+    <meta
+      property="og:image"
+      content="https://eddmann.github.io/phpx/logo.png"
+    />
+    <meta property="og:url" content="https://eddmann.github.io/phpx/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="phpx" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="phpx - Run PHP scripts with inline dependencies">
-    <meta name="twitter:description" content="phpx brings modern patterns to PHP - run scripts with inline dependencies, execute Composer tools without global installation. Like npx and uvx for PHP.">
-    <meta name="twitter:image" content="https://eddmann.github.io/phpx/logo.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="phpx - Run PHP scripts with inline dependencies"
+    />
+    <meta
+      name="twitter:description"
+      content="phpx brings modern patterns to PHP - run scripts with inline dependencies, execute Composer tools without global installation. Like npx and uvx for PHP."
+    />
+    <meta
+      name="twitter:image"
+      content="https://eddmann.github.io/phpx/logo.png"
+    />
 
     <!-- JSON-LD -->
     <script type="application/ld+json">
-    {
+      {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "phpx",
@@ -38,590 +62,940 @@
         "operatingSystem": "macOS, Linux",
         "softwareVersion": "",
         "author": {
-            "@type": "Person",
-            "name": "Edd Mann",
-            "url": "https://eddmann.com"
+          "@type": "Person",
+          "name": "Edd Mann",
+          "url": "https://eddmann.com"
         },
         "license": "https://opensource.org/licenses/MIT",
         "url": "https://github.com/eddmann/phpx",
         "downloadUrl": "https://github.com/eddmann/phpx/releases/latest",
         "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
         }
-    }
+      }
     </script>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'void': '#0a0612',
-                        'deep': '#1a0a2e',
-                        'purple': {
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
-                        },
-                        'electric': '#6366f1',
-                        'flame': '#f97316',
-                        'ember': '#fb923c',
-                        'spark': '#fbbf24',
-                    },
-                    fontFamily: {
-                        'sans': ['Instrument Sans', 'system-ui', 'sans-serif'],
-                        'mono': ['JetBrains Mono', 'monospace'],
-                    },
-                }
-            }
-        }
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              void: '#0a0612',
+              deep: '#1a0a2e',
+              purple: {
+                400: '#a78bfa',
+                500: '#8b5cf6',
+                600: '#7c3aed',
+                700: '#6d28d9',
+                800: '#5b21b6',
+                900: '#4c1d95',
+              },
+              electric: '#6366f1',
+              flame: '#f97316',
+              ember: '#fb923c',
+              spark: '#fbbf24',
+            },
+            fontFamily: {
+              sans: ['Instrument Sans', 'system-ui', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+          },
+        },
+      };
     </script>
 
     <style>
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
         }
+      }
 
-        body {
-            background: linear-gradient(180deg, #0a0612 0%, #1a0a2e 50%, #0f0720 100%);
+      body {
+        background: linear-gradient(
+          180deg,
+          #0a0612 0%,
+          #1a0a2e 50%,
+          #0f0720 100%
+        );
+      }
+
+      /* Cosmic noise texture */
+      .noise::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.03;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .content {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Glowing orb effects */
+      .orb-purple {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(139, 92, 246, 0.15) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(60px);
+      }
+
+      .orb-orange {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(249, 115, 22, 0.12) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(40px);
+      }
+
+      /* Logo glow animation */
+      .logo-glow {
+        filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.4))
+          drop-shadow(0 0 60px rgba(249, 115, 22, 0.2));
+        animation: pulse-glow 4s ease-in-out infinite;
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.4))
+            drop-shadow(0 0 60px rgba(249, 115, 22, 0.2));
         }
-
-        /* Cosmic noise texture */
-        .noise::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 1;
+        50% {
+          filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.6))
+            drop-shadow(0 0 80px rgba(249, 115, 22, 0.3));
         }
+      }
 
-        .content {
-            position: relative;
-            z-index: 2;
+      /* Terminal code block */
+      .terminal {
+        background: linear-gradient(
+          135deg,
+          rgba(15, 7, 32, 0.9) 0%,
+          rgba(26, 10, 46, 0.95) 100%
+        );
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.05),
+          0 20px 50px -10px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .terminal::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(139, 92, 246, 0.01) 2px,
+          rgba(139, 92, 246, 0.01) 4px
+        );
+        pointer-events: none;
+      }
+
+      .terminal-header {
+        background: rgba(139, 92, 246, 0.08);
+        border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+      }
+
+      /* Install command box */
+      .install-box {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 10, 46, 0.8) 0%,
+          rgba(15, 7, 32, 0.9) 100%
+        );
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .install-box:hover {
+        border-color: rgba(139, 92, 246, 0.5);
+        box-shadow: 0 0 40px rgba(139, 92, 246, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      /* Feature cards */
+      .feature-card {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 10, 46, 0.5) 0%,
+          rgba(15, 7, 32, 0.7) 100%
+        );
+        border: 1px solid rgba(139, 92, 246, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .feature-card:hover {
+        border-color: rgba(139, 92, 246, 0.4);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.2);
+      }
+
+      .feature-icon {
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.2) 0%,
+          rgba(249, 115, 22, 0.1) 100%
+        );
+        border: 1px solid rgba(139, 92, 246, 0.3);
+      }
+
+      /* Syntax highlighting */
+      .syn-comment {
+        color: #6b7280;
+      }
+      .syn-keyword {
+        color: #c084fc;
+      }
+      .syn-string {
+        color: #fbbf24;
+      }
+      .syn-function {
+        color: #60a5fa;
+      }
+      .syn-variable {
+        color: #f472b6;
+      }
+      .syn-operator {
+        color: #94a3b8;
+      }
+      .syn-class {
+        color: #4ade80;
+      }
+
+      /* Copy button */
+      .copy-btn {
+        transition: all 0.2s ease;
+      }
+
+      .copy-btn:hover {
+        background: rgba(139, 92, 246, 0.2);
+      }
+
+      .copy-btn.copied {
+        color: #4ade80;
+      }
+
+      /* Install tabs */
+      .install-tab {
+        color: #9ca3af;
+        background: transparent;
+      }
+
+      .install-tab:hover {
+        color: #e5e7eb;
+        background: rgba(139, 92, 246, 0.1);
+      }
+
+      .install-tab.active {
+        color: #e5e7eb;
+        background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+      }
+
+      /* Fade in animations */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 0.6s ease forwards;
+      }
+
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
 
-        /* Glowing orb effects */
-        .orb-purple {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            filter: blur(60px);
+      .delay-1 {
+        animation-delay: 0.1s;
+      }
+      .delay-2 {
+        animation-delay: 0.2s;
+      }
+      .delay-3 {
+        animation-delay: 0.3s;
+      }
+      .delay-4 {
+        animation-delay: 0.4s;
+      }
+      .delay-5 {
+        animation-delay: 0.5s;
+      }
+
+      /* Scroll indicator animation */
+      .animate-bounce-slow-y {
+        animation: bounce-slow-y 2s ease-in-out infinite;
+      }
+
+      @keyframes bounce-slow-y {
+        0%,
+        100% {
+          transform: translateY(0);
         }
-
-        .orb-orange {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            filter: blur(40px);
+        50% {
+          transform: translateY(8px);
         }
+      }
 
-        /* Logo glow animation */
-        .logo-glow {
-            filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.4)) drop-shadow(0 0 60px rgba(249, 115, 22, 0.2));
-            animation: pulse-glow 4s ease-in-out infinite;
-        }
+      /* Platform badges */
+      .platform-badge {
+        background: rgba(139, 92, 246, 0.1);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+      }
 
-        @keyframes pulse-glow {
-            0%, 100% { filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.4)) drop-shadow(0 0 60px rgba(249, 115, 22, 0.2)); }
-            50% { filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.6)) drop-shadow(0 0 80px rgba(249, 115, 22, 0.3)); }
-        }
+      /* Link hover effects */
+      .link-glow:hover {
+        text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+      }
 
-        /* Terminal code block */
-        .terminal {
-            background: linear-gradient(135deg, rgba(15, 7, 32, 0.9) 0%, rgba(26, 10, 46, 0.95) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            box-shadow:
-                0 0 0 1px rgba(139, 92, 246, 0.05),
-                0 20px 50px -10px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.03);
-            position: relative;
-            overflow: hidden;
-        }
+      /* Scrollbar styling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
 
-        .terminal::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(139, 92, 246, 0.01) 2px,
-                rgba(139, 92, 246, 0.01) 4px
-            );
-            pointer-events: none;
-        }
+      ::-webkit-scrollbar-track {
+        background: #0a0612;
+      }
 
-        .terminal-header {
-            background: rgba(139, 92, 246, 0.08);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.15);
-        }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(139, 92, 246, 0.3);
+        border-radius: 4px;
+      }
 
-        /* Install command box */
-        .install-box {
-            background: linear-gradient(135deg, rgba(26, 10, 46, 0.8) 0%, rgba(15, 7, 32, 0.9) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            box-shadow:
-                0 0 30px rgba(139, 92, 246, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-
-        .install-box:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow:
-                0 0 40px rgba(139, 92, 246, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-
-        /* Feature cards */
-        .feature-card {
-            background: linear-gradient(135deg, rgba(26, 10, 46, 0.5) 0%, rgba(15, 7, 32, 0.7) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.15);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            border-color: rgba(139, 92, 246, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.2);
-        }
-
-        .feature-icon {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(249, 115, 22, 0.1) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        /* Syntax highlighting */
-        .syn-comment { color: #6b7280; }
-        .syn-keyword { color: #c084fc; }
-        .syn-string { color: #fbbf24; }
-        .syn-function { color: #60a5fa; }
-        .syn-variable { color: #f472b6; }
-        .syn-operator { color: #94a3b8; }
-        .syn-class { color: #4ade80; }
-
-        /* Copy button */
-        .copy-btn {
-            transition: all 0.2s ease;
-        }
-
-        .copy-btn:hover {
-            background: rgba(139, 92, 246, 0.2);
-        }
-
-        .copy-btn.copied {
-            color: #4ade80;
-        }
-
-        /* Install tabs */
-        .install-tab {
-            color: #9ca3af;
-            background: transparent;
-        }
-
-        .install-tab:hover {
-            color: #e5e7eb;
-            background: rgba(139, 92, 246, 0.1);
-        }
-
-        .install-tab.active {
-            color: #e5e7eb;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        /* Fade in animations */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.6s ease forwards;
-        }
-
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-        .delay-5 { animation-delay: 0.5s; }
-
-        /* Scroll indicator animation */
-        .animate-bounce-slow {
-            animation: bounce-slow 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce-slow {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(8px); }
-        }
-
-        /* Platform badges */
-        .platform-badge {
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        /* Link hover effects */
-        .link-glow:hover {
-            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-        }
-
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a0612;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.3);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.5);
-        }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(139, 92, 246, 0.5);
+      }
     </style>
-</head>
-<body class="min-h-screen text-gray-100 noise overflow-x-hidden">
+  </head>
+  <body class="min-h-screen text-gray-100 noise overflow-x-hidden">
     <div class="content">
-        <!-- Background orbs -->
-        <div class="orb-purple" style="top: -200px; left: -200px;"></div>
-        <div class="orb-orange" style="top: 100px; right: -100px;"></div>
-        <div class="orb-purple" style="top: 800px; right: -300px; opacity: 0.5;"></div>
+      <!-- Background orbs (hidden on mobile to prevent overflow) -->
+      <div
+        class="orb-purple hidden md:block"
+        style="top: -200px; left: -200px"
+      ></div>
+      <div
+        class="orb-orange hidden md:block"
+        style="top: 100px; right: -100px"
+      ></div>
+      <div
+        class="orb-purple hidden md:block"
+        style="top: 800px; right: -300px; opacity: 0.5"
+      ></div>
 
-        <!-- Hero Section -->
-        <header class="relative min-h-screen flex items-center justify-center px-6 py-20">
-            <div class="max-w-4xl mx-auto text-center">
-                <!-- Logo -->
-                <div class="fade-up mb-8">
-                    <img src="logo.png" alt="phpx logo" class="logo-glow mx-auto h-32 md:h-40 w-auto">
-                </div>
+      <!-- Hero Section -->
+      <header
+        class="relative min-h-screen flex items-center justify-center px-6 py-20"
+      >
+        <div class="max-w-4xl mx-auto text-center">
+          <!-- Logo -->
+          <div class="fade-up mb-6 sm:mb-8">
+            <img
+              src="logo.png"
+              alt="phpx logo"
+              class="logo-glow mx-auto h-24 sm:h-32 md:h-40 w-auto"
+            />
+          </div>
 
-                <!-- Tagline -->
-                <h1 class="fade-up delay-1 text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-100 mb-4 tracking-tight">
-                    Run PHP scripts with <span class="text-purple-400">inline dependencies</span>
-                </h1>
-                <p class="fade-up delay-2 text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-                    Execute Composer tools without global installation.<br>
-                    Like <span class="text-ember font-mono text-base">npx</span> and <span class="text-ember font-mono text-base">uvx</span> for PHP.
-                </p>
+          <!-- Tagline -->
+          <h1
+            class="fade-up delay-1 text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-100 mb-4 tracking-tight"
+          >
+            Run PHP scripts with
+            <span class="text-purple-400">inline dependencies</span>
+          </h1>
+          <p
+            class="fade-up delay-2 text-base sm:text-lg md:text-xl text-gray-400 mb-10"
+          >
+            Execute Composer tools without global installation.<br />
+            Like
+            <span class="text-ember font-mono text-sm sm:text-base">npx</span>
+            and
+            <span class="text-ember font-mono text-sm sm:text-base">uvx</span>
+            for PHP.
+          </p>
 
-                <!-- Install Tabs -->
-                <div class="fade-up delay-3 max-w-xl mx-auto mb-12">
-                    <!-- Tab buttons -->
-                    <div class="flex justify-center gap-1 mb-4">
-                        <button onclick="showTab('homebrew')" class="install-tab active px-4 py-2 text-sm font-medium rounded-lg transition-all" data-tab="homebrew">
-                            Homebrew
-                        </button>
-                        <button onclick="showTab('script')" class="install-tab px-4 py-2 text-sm font-medium rounded-lg transition-all" data-tab="script">
-                            Script
-                        </button>
-                        <button onclick="showTab('binary')" class="install-tab px-4 py-2 text-sm font-medium rounded-lg transition-all" data-tab="binary">
-                            Binary
-                        </button>
-                    </div>
-
-                    <!-- Tab content -->
-                    <div class="install-box rounded-xl transition-all duration-300">
-                        <!-- Homebrew -->
-                        <div id="tab-homebrew" class="tab-content p-4">
-                            <div class="flex items-center justify-between">
-                                <div class="overflow-x-auto">
-                                    <code class="font-mono text-sm md:text-base text-gray-200 whitespace-nowrap"><span class="text-gray-500">$</span> brew install <span class="text-purple-400">eddmann/tap/phpx</span></code>
-                                </div>
-                                <button onclick="copyCommand(this, 'brew install eddmann/tap/phpx')" class="copy-btn p-2 rounded-lg text-gray-400 hover:text-gray-200 flex-shrink-0" title="Copy">
-                                    <svg class="w-5 h-5 copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                                    <svg class="w-5 h-5 check-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Script -->
-                        <div id="tab-script" class="tab-content p-4 hidden">
-                            <div class="flex items-center justify-between">
-                                <div class="overflow-x-auto">
-                                    <code class="font-mono text-sm md:text-base text-gray-200 whitespace-nowrap"><span class="text-gray-500">$</span> curl -fsSL <span class="text-purple-400">https://raw.githubusercontent.com/eddmann/phpx/main/install.sh</span> | sh</code>
-                                </div>
-                                <button onclick="copyCommand(this, 'curl -fsSL https://raw.githubusercontent.com/eddmann/phpx/main/install.sh | sh')" class="copy-btn p-2 rounded-lg text-gray-400 hover:text-gray-200 flex-shrink-0" title="Copy">
-                                    <svg class="w-5 h-5 copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                                    <svg class="w-5 h-5 check-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Binary -->
-                        <div id="tab-binary" class="tab-content p-4 hidden">
-                            <div class="flex flex-wrap justify-center gap-3">
-                                <a href="https://github.com/eddmann/phpx/releases/latest/download/phpx-macos-arm64" class="platform-badge px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:border-purple-400 transition-all inline-flex items-center gap-2">
-                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                                    macOS (Apple Silicon)
-                                </a>
-                                <a href="https://github.com/eddmann/phpx/releases/latest/download/phpx-macos-x64" class="platform-badge px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:border-purple-400 transition-all inline-flex items-center gap-2">
-                                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                                    macOS (Intel)
-                                </a>
-                                <a href="https://github.com/eddmann/phpx/releases/latest/download/phpx-linux-x64" class="platform-badge px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:border-purple-400 transition-all inline-flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 448 512"><path d="M220.8 123.3c1 .5 1.8 1.7 3 1.7 1.1 0 2.8-.4 2.9-1.5.2-1.4-1.9-2.3-3.2-2.9-1.7-.7-3.9-1-5.5-.1-.4.2-.8.7-.6 1.1.3 1.3 2.3 1.1 3.4 1.7zm-21.9 1.7c1.2 0 2-1.2 3-1.7 1.1-.6 3.1-.4 3.5-1.6.2-.4-.2-.9-.6-1.1-1.6-.9-3.8-.6-5.5.1-1.3.6-3.4 1.5-3.2 2.9.1 1 1.8 1.5 2.8 1.4zM420 403.8c-3.6-4-5.3-11.6-7.2-19.7-1.8-8.1-3.9-16.8-10.5-22.4-1.3-1.1-2.6-2.1-4-2.9-1.3-.8-2.7-1.5-4.1-2 9.2-27.3 5.6-54.5-3.7-79.1-11.4-30.1-31.3-56.4-46.5-74.4-17.1-21.5-33.7-41.9-33.4-72C311.1 85.4 315.7.1 234.8 0 132.4-.2 158 103.4 156.9 135.2c-1.7 23.4-6.4 41.8-22.5 64.7-18.9 22.5-45.5 58.8-58.1 96.7-6 17.9-8.8 36.1-6.2 53.3-6.5 5.8-11.4 14.7-16.6 20.2-4.2 4.3-10.3 5.9-17 8.3s-14 6-18.5 14.5c-2.1 3.9-2.8 8.1-2.8 12.4 0 3.9.6 7.9 1.2 11.8 1.2 8.1 2.5 15.7.8 20.8-5.2 14.4-5.9 24.4-2.2 31.7 3.8 7.3 11.4 10.5 20.1 12.3 17.3 3.6 40.8 2.7 59.3 12.5 19.8 10.4 39.9 14.1 55.9 10.4 11.6-2.6 21.1-9.6 25.9-20.2 12.5-.1 26.3-5.4 48.3-6.6 14.9-1.2 33.6 5.3 55.1 4.1.6 2.3 1.4 4.6 2.5 6.7v.1c8.3 16.7 23.8 24.3 40.3 23 16.6-1.3 34.1-11 48.3-27.9 13.6-16.4 36-23.2 50.9-32.2 7.4-4.5 13.4-10.1 13.9-18.3.4-8.2-4.4-17.3-15.5-29.7zM223.7 87.3c9.8-22.2 34.2-21.8 44-.4 6.5 14.2 3.6 30.9-4.3 40.4-1.6-.8-5.9-2.6-12.6-4.9 1.1-1.2 3.1-2.7 3.9-4.6 4.8-11.8-.2-27-9.1-27.3-7.3-.5-13.9 10.8-11.8 23-4.1-2-9.4-3.5-13-4.4-1-6.9-.3-14.6 2.9-21.8zM183 75.8c10.1 0 20.8 14.2 19.1 33.5-3.5 1-7.1 2.5-10.2 4.6 1.2-8.9-3.3-20.1-9.6-19.6-8.4.7-9.8 21.2-1.8 28.1 1 .8 1.9-.2-5.9 5.5-15.6-14.6-10.5-52.1 8.4-52.1zm-13.6 60.7c6.2-4.6 13.6-10 14.1-10.5 4.7-4.4 13.5-14.2 27.9-14.2 7.1 0 15.6 2.3 25.9 8.9 6.3 4.1 11.3 4.4 22.6 9.3 8.4 3.5 13.7 9.7 10.5 18.2-2.6 7.1-11 14.4-22.7 18.1-11.1 3.6-19.8 16-38.2 14.9-3.9-.2-7-1-9.6-2.1-8-3.5-12.2-10.4-20-15-8.6-4.8-13.2-10.4-14.7-15.3-1.4-4.9 0-9 4.2-12.3zm3.3 334c-2.7 35.1-43.9 34.4-75.3 18-29.9-15.8-68.6-6.5-76.5-21.9-2.4-4.7-2.4-12.7 2.6-26.4v-.2c2.4-7.6.6-16-.6-23.9-1.2-7.8-1.8-15 .9-20 3.5-6.7 8.5-9.1 14.8-11.3 10.3-3.7 11.8-3.4 19.6-9.9 5.5-5.7 9.5-12.9 14.3-18 5.1-5.5 10-8.1 17.7-6.9 8.1 1.2 15.1 6.8 21.9 16l19.6 35.6c9.5 19.9 43.1 48.4 41 68.9zm-30.5-154.8c17.9-12.1 33.6-21.5 44.1-29.9 11-8.8 18.2-19 18.2-29.7 0-4.6-1.4-8.2-3.2-11.4-1.7-3.2-3.6-6.1-4.9-9.4-2.1-5.4-1.1-13.3-1.1-21.8 0-1.8.3-3.6.3-5.5.6-3.6 1.4-7.1 2.8-10.6.5-1.2 1.1-2.4 1.8-3.5 1.5-2.1 3.5-3.6 6-4.5 3.5-1.3 7.6-1.1 11.6.2 5.8 2.1 10.5 7.3 14.3 12.7 4 5.7 7.1 12 9.1 18.3 3.1 9.6 4.2 18.9 3.1 26.5-1.2 7.6-4.6 13.2-10.9 15.2-3.7 1.2-7.3.9-11.1.5-3.8-.4-7.6-1.2-11.3-.3-3.5.9-6.1 3.4-9.1 7.2l-2 2.5c-2.3 3.2-4.5 6.1-7.2 9.1-2.7 3-5.7 5.7-9.2 8.4-17.7 13.6-51.4 24.6-65.1 31-1.9.9-3.4-1.6-2.1-3.5zm125.6-106.1c5.1-1.4 10.2-4.4 14-8.8 3.8-4.5 6.5-10.6 7.6-17.9 1.2-8.2.1-18.2-3.2-28.6-2.1-6.6-5.3-13.1-9.5-19.2-4.2-6-9.4-11.5-15.5-14.6-4.7-2.4-9.4-3.4-13.8-3.4-2.5 0-5 .3-7.4 1-2.4.7-4.7 1.7-6.8 3.1-2.1 1.4-4 3.3-5.5 5.5-.8 1.2-1.5 2.4-2.2 3.7-1.9 4-3.3 8.6-3.6 13.3-.1 1-.2 2-.2 3 0 7.2.3 14.3 1.5 19.9 1.3 5.7 3.3 10.1 6.6 13.4 1.6 1.6 3.1 3.2 4.8 4.7 1.7 1.5 3.5 2.8 5.7 3.7 2.5 1.1 5.1 1.8 7.8 2.1 6.3.8 13 .5 19.6-1.1z"/></svg>
-                                    Linux (x64)
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GitHub link -->
-                <div class="fade-up delay-5">
-                    <a
-                        href="https://github.com/eddmann/phpx"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors link-glow"
-                    >
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="font-medium">View on GitHub</span>
-                    </a>
-                </div>
+          <!-- Install Tabs -->
+          <div class="fade-up delay-3 w-full max-w-xl mx-auto mb-12">
+            <!-- Tab buttons -->
+            <div class="flex justify-center gap-1 mb-4">
+              <button
+                onclick="showTab('homebrew')"
+                class="install-tab active px-4 py-2 text-sm font-medium rounded-lg transition-all"
+                data-tab="homebrew"
+              >
+                Homebrew
+              </button>
+              <button
+                onclick="showTab('script')"
+                class="install-tab px-4 py-2 text-sm font-medium rounded-lg transition-all"
+                data-tab="script"
+              >
+                Script
+              </button>
+              <button
+                onclick="showTab('binary')"
+                class="install-tab px-4 py-2 text-sm font-medium rounded-lg transition-all"
+                data-tab="binary"
+              >
+                Binary
+              </button>
             </div>
 
-            <!-- Scroll indicator -->
-            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-slow">
-                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            <!-- Tab content -->
+            <div class="install-box rounded-xl transition-all duration-300">
+              <!-- Homebrew -->
+              <div id="tab-homebrew" class="tab-content p-4">
+                <div class="flex items-center justify-between">
+                  <div class="overflow-x-auto">
+                    <code
+                      class="font-mono text-sm md:text-base text-gray-200 whitespace-nowrap"
+                      ><span class="text-gray-500">$</span> brew install
+                      <span class="text-purple-400"
+                        >eddmann/tap/phpx</span
+                      ></code
+                    >
+                  </div>
+                  <button
+                    onclick="copyCommand(this, 'brew install eddmann/tap/phpx')"
+                    class="copy-btn p-2 rounded-lg text-gray-400 hover:text-gray-200 flex-shrink-0"
+                    title="Copy"
+                  >
+                    <svg
+                      class="w-5 h-5 copy-icon"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-5 h-5 check-icon hidden"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Script -->
+              <div id="tab-script" class="tab-content p-4 hidden">
+                <div class="flex items-center justify-between">
+                  <div class="overflow-x-auto">
+                    <code
+                      class="font-mono text-sm md:text-base text-gray-200 whitespace-nowrap"
+                      ><span class="text-gray-500">$</span> curl -fsSL
+                      <span class="text-purple-400"
+                        >https://raw.githubusercontent.com/eddmann/phpx/main/install.sh</span
+                      >
+                      | sh</code
+                    >
+                  </div>
+                  <button
+                    onclick="copyCommand(this, 'curl -fsSL https://raw.githubusercontent.com/eddmann/phpx/main/install.sh | sh')"
+                    class="copy-btn p-2 rounded-lg text-gray-400 hover:text-gray-200 flex-shrink-0"
+                    title="Copy"
+                  >
+                    <svg
+                      class="w-5 h-5 copy-icon"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                    <svg
+                      class="w-5 h-5 check-icon hidden"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Binary -->
+              <div id="tab-binary" class="tab-content p-4 hidden">
+                <div class="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 sm:gap-3">
+                  <a
+                    href="https://github.com/eddmann/phpx/releases/latest/download/phpx-macos-arm64"
+                    class="platform-badge px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:border-purple-400 transition-all inline-flex items-center gap-2"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
+                      />
+                    </svg>
+                    macOS (Apple Silicon)
+                  </a>
+                  <a
+                    href="https://github.com/eddmann/phpx/releases/latest/download/phpx-macos-x64"
+                    class="platform-badge px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:border-purple-400 transition-all inline-flex items-center gap-2"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"
+                      />
+                    </svg>
+                    macOS (Intel)
+                  </a>
+                  <a
+                    href="https://github.com/eddmann/phpx/releases/latest/download/phpx-linux-x64"
+                    class="platform-badge px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:border-purple-400 transition-all inline-flex items-center gap-2"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M220.8 123.3c1 .5 1.8 1.7 3 1.7 1.1 0 2.8-.4 2.9-1.5.2-1.4-1.9-2.3-3.2-2.9-1.7-.7-3.9-1-5.5-.1-.4.2-.8.7-.6 1.1.3 1.3 2.3 1.1 3.4 1.7zm-21.9 1.7c1.2 0 2-1.2 3-1.7 1.1-.6 3.1-.4 3.5-1.6.2-.4-.2-.9-.6-1.1-1.6-.9-3.8-.6-5.5.1-1.3.6-3.4 1.5-3.2 2.9.1 1 1.8 1.5 2.8 1.4zM420 403.8c-3.6-4-5.3-11.6-7.2-19.7-1.8-8.1-3.9-16.8-10.5-22.4-1.3-1.1-2.6-2.1-4-2.9-1.3-.8-2.7-1.5-4.1-2 9.2-27.3 5.6-54.5-3.7-79.1-11.4-30.1-31.3-56.4-46.5-74.4-17.1-21.5-33.7-41.9-33.4-72C311.1 85.4 315.7.1 234.8 0 132.4-.2 158 103.4 156.9 135.2c-1.7 23.4-6.4 41.8-22.5 64.7-18.9 22.5-45.5 58.8-58.1 96.7-6 17.9-8.8 36.1-6.2 53.3-6.5 5.8-11.4 14.7-16.6 20.2-4.2 4.3-10.3 5.9-17 8.3s-14 6-18.5 14.5c-2.1 3.9-2.8 8.1-2.8 12.4 0 3.9.6 7.9 1.2 11.8 1.2 8.1 2.5 15.7.8 20.8-5.2 14.4-5.9 24.4-2.2 31.7 3.8 7.3 11.4 10.5 20.1 12.3 17.3 3.6 40.8 2.7 59.3 12.5 19.8 10.4 39.9 14.1 55.9 10.4 11.6-2.6 21.1-9.6 25.9-20.2 12.5-.1 26.3-5.4 48.3-6.6 14.9-1.2 33.6 5.3 55.1 4.1.6 2.3 1.4 4.6 2.5 6.7v.1c8.3 16.7 23.8 24.3 40.3 23 16.6-1.3 34.1-11 48.3-27.9 13.6-16.4 36-23.2 50.9-32.2 7.4-4.5 13.4-10.1 13.9-18.3.4-8.2-4.4-17.3-15.5-29.7zM223.7 87.3c9.8-22.2 34.2-21.8 44-.4 6.5 14.2 3.6 30.9-4.3 40.4-1.6-.8-5.9-2.6-12.6-4.9 1.1-1.2 3.1-2.7 3.9-4.6 4.8-11.8-.2-27-9.1-27.3-7.3-.5-13.9 10.8-11.8 23-4.1-2-9.4-3.5-13-4.4-1-6.9-.3-14.6 2.9-21.8zM183 75.8c10.1 0 20.8 14.2 19.1 33.5-3.5 1-7.1 2.5-10.2 4.6 1.2-8.9-3.3-20.1-9.6-19.6-8.4.7-9.8 21.2-1.8 28.1 1 .8 1.9-.2-5.9 5.5-15.6-14.6-10.5-52.1 8.4-52.1zm-13.6 60.7c6.2-4.6 13.6-10 14.1-10.5 4.7-4.4 13.5-14.2 27.9-14.2 7.1 0 15.6 2.3 25.9 8.9 6.3 4.1 11.3 4.4 22.6 9.3 8.4 3.5 13.7 9.7 10.5 18.2-2.6 7.1-11 14.4-22.7 18.1-11.1 3.6-19.8 16-38.2 14.9-3.9-.2-7-1-9.6-2.1-8-3.5-12.2-10.4-20-15-8.6-4.8-13.2-10.4-14.7-15.3-1.4-4.9 0-9 4.2-12.3zm3.3 334c-2.7 35.1-43.9 34.4-75.3 18-29.9-15.8-68.6-6.5-76.5-21.9-2.4-4.7-2.4-12.7 2.6-26.4v-.2c2.4-7.6.6-16-.6-23.9-1.2-7.8-1.8-15 .9-20 3.5-6.7 8.5-9.1 14.8-11.3 10.3-3.7 11.8-3.4 19.6-9.9 5.5-5.7 9.5-12.9 14.3-18 5.1-5.5 10-8.1 17.7-6.9 8.1 1.2 15.1 6.8 21.9 16l19.6 35.6c9.5 19.9 43.1 48.4 41 68.9zm-30.5-154.8c17.9-12.1 33.6-21.5 44.1-29.9 11-8.8 18.2-19 18.2-29.7 0-4.6-1.4-8.2-3.2-11.4-1.7-3.2-3.6-6.1-4.9-9.4-2.1-5.4-1.1-13.3-1.1-21.8 0-1.8.3-3.6.3-5.5.6-3.6 1.4-7.1 2.8-10.6.5-1.2 1.1-2.4 1.8-3.5 1.5-2.1 3.5-3.6 6-4.5 3.5-1.3 7.6-1.1 11.6.2 5.8 2.1 10.5 7.3 14.3 12.7 4 5.7 7.1 12 9.1 18.3 3.1 9.6 4.2 18.9 3.1 26.5-1.2 7.6-4.6 13.2-10.9 15.2-3.7 1.2-7.3.9-11.1.5-3.8-.4-7.6-1.2-11.3-.3-3.5.9-6.1 3.4-9.1 7.2l-2 2.5c-2.3 3.2-4.5 6.1-7.2 9.1-2.7 3-5.7 5.7-9.2 8.4-17.7 13.6-51.4 24.6-65.1 31-1.9.9-3.4-1.6-2.1-3.5zm125.6-106.1c5.1-1.4 10.2-4.4 14-8.8 3.8-4.5 6.5-10.6 7.6-17.9 1.2-8.2.1-18.2-3.2-28.6-2.1-6.6-5.3-13.1-9.5-19.2-4.2-6-9.4-11.5-15.5-14.6-4.7-2.4-9.4-3.4-13.8-3.4-2.5 0-5 .3-7.4 1-2.4.7-4.7 1.7-6.8 3.1-2.1 1.4-4 3.3-5.5 5.5-.8 1.2-1.5 2.4-2.2 3.7-1.9 4-3.3 8.6-3.6 13.3-.1 1-.2 2-.2 3 0 7.2.3 14.3 1.5 19.9 1.3 5.7 3.3 10.1 6.6 13.4 1.6 1.6 3.1 3.2 4.8 4.7 1.7 1.5 3.5 2.8 5.7 3.7 2.5 1.1 5.1 1.8 7.8 2.1 6.3.8 13 .5 19.6-1.1z"
+                      />
+                    </svg>
+                    Linux (x64)
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GitHub link -->
+          <div class="fade-up delay-5">
+            <a
+              href="https://github.com/eddmann/phpx"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors link-glow"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  fill-rule="evenodd"
+                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="font-medium">View on GitHub</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-0 right-0 flex justify-center">
+          <div class="animate-bounce-slow-y">
+            <svg
+              class="w-6 h-6 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <!-- Features Section -->
+      <section class="px-6 py-16 md:py-24">
+        <div class="max-w-5xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Feature 1 -->
+            <div class="feature-card rounded-2xl p-6 md:p-8">
+              <div
+                class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+              >
+                <svg
+                  class="w-6 h-6 text-purple-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 13h6m-6 4h6"
+                  />
                 </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-100 mb-3">
+                Inline Dependencies
+              </h3>
+              <p class="text-gray-400 leading-relaxed">
+                Declare packages in a
+                <code class="text-purple-400 font-mono text-sm">// phpx</code>
+                comment block at the top of your script. They're installed
+                automatically.
+              </p>
             </div>
-        </header>
 
-        <!-- Features Section -->
-        <section class="px-6 py-16 md:py-24">
-            <div class="max-w-5xl mx-auto">
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Feature 1 -->
-                    <div class="feature-card rounded-2xl p-6 md:p-8">
-                        <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
-                            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-6 4h6"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-100 mb-3">Inline Dependencies</h3>
-                        <p class="text-gray-400 leading-relaxed">
-                            Declare packages in a <code class="text-purple-400 font-mono text-sm">// phpx</code> comment block at the top of your script. They're installed automatically.
-                        </p>
-                    </div>
-
-                    <!-- Feature 2 -->
-                    <div class="feature-card rounded-2xl p-6 md:p-8">
-                        <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
-                            <svg class="w-6 h-6 text-ember" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-100 mb-3">Ephemeral Tools</h3>
-                        <p class="text-gray-400 leading-relaxed">
-                            Run PHPStan, Psalm, PHP-CS-Fixer, and more without polluting your global environment. Tools are cached for fast re-runs.
-                        </p>
-                    </div>
-
-                    <!-- Feature 3 -->
-                    <div class="feature-card rounded-2xl p-6 md:p-8">
-                        <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
-                            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-100 mb-3">Automatic PHP Management</h3>
-                        <p class="text-gray-400 leading-relaxed">
-                            Downloads pre-built static PHP binaries matching your version constraints. No system PHP required.
-                        </p>
-                    </div>
-
-                    <!-- Feature 4 -->
-                    <div class="feature-card rounded-2xl p-6 md:p-8">
-                        <div class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5">
-                            <svg class="w-6 h-6 text-ember" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-100 mb-3">Smart Caching</h3>
-                        <p class="text-gray-400 leading-relaxed">
-                            PHP binaries, dependencies, and tools are intelligently cached at <code class="text-purple-400 font-mono text-sm">~/.phpx/</code> for instant subsequent runs.
-                        </p>
-                    </div>
-                </div>
+            <!-- Feature 2 -->
+            <div class="feature-card rounded-2xl p-6 md:p-8">
+              <div
+                class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+              >
+                <svg
+                  class="w-6 h-6 text-ember"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-100 mb-3">
+                Ephemeral Tools
+              </h3>
+              <p class="text-gray-400 leading-relaxed">
+                Run PHPStan, Psalm, PHP-CS-Fixer, and more without polluting
+                your global environment. Tools are cached for fast re-runs.
+              </p>
             </div>
-        </section>
 
-        <!-- Code Examples Section -->
-        <section class="px-6 py-16 md:py-24">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl md:text-3xl font-semibold text-center text-gray-100 mb-4">
-                    Quick Start
-                </h2>
-                <p class="text-gray-400 text-center mb-12 max-w-xl mx-auto">
-                    Add a comment block to declare dependencies, then run your script.
-                </p>
-
-                <div class="space-y-8">
-                    <!-- Example 1: Inline dependencies -->
-                    <div class="terminal rounded-2xl overflow-hidden">
-                        <div class="terminal-header px-4 py-3 flex items-center gap-2">
-                            <div class="flex gap-1.5">
-                                <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
-                            </div>
-                            <span class="ml-2 text-xs text-gray-500 font-mono">script.php</span>
-                        </div>
-                        <div class="p-6 font-mono text-sm leading-relaxed overflow-x-auto">
-                            <div class="syn-keyword">&lt;?php</div>
-                            <div class="syn-comment">// phpx</div>
-                            <div class="syn-comment">// packages = [<span class="syn-string">"nesbot/carbon:^3.0"</span>]</div>
-                            <div class="mt-4"></div>
-                            <div>
-                                <span class="syn-keyword">echo</span>
-                                <span class="syn-operator">\</span><span class="syn-class">Carbon</span><span class="syn-operator">\</span><span class="syn-class">Carbon</span><span class="syn-operator">::</span><span class="syn-function">parse</span><span class="syn-operator">(</span><span class="syn-string">'next friday'</span><span class="syn-operator">)-></span><span class="syn-function">diffForHumans</span><span class="syn-operator">();</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Run command -->
-                    <div class="terminal rounded-2xl overflow-hidden">
-                        <div class="terminal-header px-4 py-3 flex items-center gap-2">
-                            <div class="flex gap-1.5">
-                                <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
-                            </div>
-                            <span class="ml-2 text-xs text-gray-500 font-mono">terminal</span>
-                        </div>
-                        <div class="p-6 font-mono text-sm leading-relaxed">
-                            <div><span class="text-gray-500">$</span> <span class="text-gray-200">phpx script.php</span></div>
-                            <div class="text-green-400 mt-2">6 days from now</div>
-                        </div>
-                    </div>
-
-                    <!-- Example 2: Tool execution -->
-                    <div class="terminal rounded-2xl overflow-hidden">
-                        <div class="terminal-header px-4 py-3 flex items-center gap-2">
-                            <div class="flex gap-1.5">
-                                <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
-                            </div>
-                            <span class="ml-2 text-xs text-gray-500 font-mono">terminal</span>
-                        </div>
-                        <div class="p-6 font-mono text-sm leading-relaxed">
-                            <div class="text-gray-400 mb-2"># Run PHPStan without installing it globally</div>
-                            <div><span class="text-gray-500">$</span> <span class="text-gray-200">phpx tool phpstan</span> <span class="text-gray-500">--</span> <span class="text-purple-400">analyze src/</span></div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Feature 3 -->
+            <div class="feature-card rounded-2xl p-6 md:p-8">
+              <div
+                class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+              >
+                <svg
+                  class="w-6 h-6 text-purple-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-100 mb-3">
+                Automatic PHP Management
+              </h3>
+              <p class="text-gray-400 leading-relaxed">
+                Downloads pre-built static PHP binaries matching your version
+                constraints. No system PHP required.
+              </p>
             </div>
-        </section>
 
-        <!-- Footer -->
-        <footer class="px-6 py-12 border-t border-purple-900/30">
-            <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-6">
-                    <a
-                        href="https://github.com/eddmann/phpx"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-gray-400 hover:text-purple-400 transition-colors"
-                    >
-                        GitHub
-                    </a>
-                    <a
-                        href="https://github.com/eddmann/phpx/releases"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-gray-400 hover:text-purple-400 transition-colors"
-                    >
-                        Releases
-                    </a>
-                    <a
-                        href="https://github.com/eddmann/phpx/blob/main/LICENSE"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-gray-400 hover:text-purple-400 transition-colors"
-                    >
-                        MIT License
-                    </a>
-                </div>
-                <div class="text-gray-500 text-sm">
-                    Built by <a href="https://eddmann.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-purple-400 transition-colors">Edd Mann</a>
-                </div>
+            <!-- Feature 4 -->
+            <div class="feature-card rounded-2xl p-6 md:p-8">
+              <div
+                class="feature-icon w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+              >
+                <svg
+                  class="w-6 h-6 text-ember"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  />
+                </svg>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-100 mb-3">
+                Smart Caching
+              </h3>
+              <p class="text-gray-400 leading-relaxed">
+                PHP binaries, dependencies, and tools are intelligently cached
+                at
+                <code class="text-purple-400 font-mono text-sm">~/.phpx/</code>
+                for instant subsequent runs.
+              </p>
             </div>
-        </footer>
+          </div>
+        </div>
+      </section>
+
+      <!-- Code Examples Section -->
+      <section class="px-6 py-16 md:py-24">
+        <div class="max-w-4xl mx-auto">
+          <h2
+            class="text-2xl md:text-3xl font-semibold text-center text-gray-100 mb-4"
+          >
+            Quick Start
+          </h2>
+          <p class="text-gray-400 text-center mb-12 max-w-xl mx-auto">
+            Add a comment block to declare dependencies, then run your script.
+          </p>
+
+          <div class="space-y-8">
+            <!-- Example 1: Inline dependencies -->
+            <div class="terminal rounded-2xl overflow-hidden">
+              <div class="terminal-header px-4 py-3 flex items-center gap-2">
+                <div class="flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
+                </div>
+                <span class="ml-2 text-xs text-gray-500 font-mono"
+                  >script.php</span
+                >
+              </div>
+              <div
+                class="p-6 font-mono text-sm leading-relaxed overflow-x-auto"
+              >
+                <div class="whitespace-nowrap">
+                  <div class="syn-keyword">&lt;?php</div>
+                  <div class="syn-comment">// phpx</div>
+                  <div class="syn-comment">
+                    // packages = [<span class="syn-string"
+                      >"nesbot/carbon:^3.0"</span
+                    >]
+                  </div>
+                  <div class="mt-4"></div>
+                  <div>
+                    <span class="syn-keyword">echo</span>
+                    <span class="syn-operator">\</span
+                    ><span class="syn-class">Carbon</span
+                    ><span class="syn-operator">\</span
+                    ><span class="syn-class">Carbon</span
+                    ><span class="syn-operator">::</span
+                    ><span class="syn-function">parse</span
+                    ><span class="syn-operator">(</span
+                    ><span class="syn-string">'next friday'</span
+                    ><span class="syn-operator">)-></span
+                    ><span class="syn-function">diffForHumans</span
+                    ><span class="syn-operator">();</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Run command -->
+            <div class="terminal rounded-2xl overflow-hidden">
+              <div class="terminal-header px-4 py-3 flex items-center gap-2">
+                <div class="flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
+                </div>
+                <span class="ml-2 text-xs text-gray-500 font-mono"
+                  >terminal</span
+                >
+              </div>
+              <div
+                class="p-6 font-mono text-sm leading-relaxed overflow-x-auto"
+              >
+                <div class="whitespace-nowrap">
+                  <div>
+                    <span class="text-gray-500">$</span>
+                    <span class="text-gray-200">phpx script.php</span>
+                  </div>
+                  <div class="text-green-400 mt-2">6 days from now</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Example 2: Tool execution -->
+            <div class="terminal rounded-2xl overflow-hidden">
+              <div class="terminal-header px-4 py-3 flex items-center gap-2">
+                <div class="flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
+                </div>
+                <span class="ml-2 text-xs text-gray-500 font-mono"
+                  >terminal</span
+                >
+              </div>
+              <div
+                class="p-6 font-mono text-sm leading-relaxed overflow-x-auto"
+              >
+                <div class="whitespace-nowrap">
+                  <div class="text-gray-400 mb-2">
+                    # Run PHPStan without installing it globally
+                  </div>
+                  <div>
+                    <span class="text-gray-500">$</span>
+                    <span class="text-gray-200">phpx tool phpstan</span>
+                    <span class="text-gray-500">--</span>
+                    <span class="text-purple-400">analyze src/</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="px-6 py-12 border-t border-purple-900/30">
+        <div
+          class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4"
+        >
+          <div class="flex items-center gap-6">
+            <a
+              href="https://github.com/eddmann/phpx"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-purple-400 transition-colors"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://github.com/eddmann/phpx/releases"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-purple-400 transition-colors"
+            >
+              Releases
+            </a>
+            <a
+              href="https://github.com/eddmann/phpx/blob/main/LICENSE"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-purple-400 transition-colors"
+            >
+              MIT License
+            </a>
+          </div>
+          <div class="text-gray-500 text-sm">
+            Built by
+            <a
+              href="https://eddmann.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-400 hover:text-purple-400 transition-colors"
+              >Edd Mann</a
+            >
+          </div>
+        </div>
+      </footer>
     </div>
 
     <script>
-        function showTab(tab) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            // Show selected tab
-            document.getElementById('tab-' + tab).classList.remove('hidden');
-            // Update tab button states
-            document.querySelectorAll('.install-tab').forEach(el => el.classList.remove('active'));
-            document.querySelector('.install-tab[data-tab="' + tab + '"]').classList.add('active');
-        }
+      function showTab(tab) {
+        // Hide all tab contents
+        document
+          .querySelectorAll('.tab-content')
+          .forEach(el => el.classList.add('hidden'));
+        // Show selected tab
+        document.getElementById('tab-' + tab).classList.remove('hidden');
+        // Update tab button states
+        document
+          .querySelectorAll('.install-tab')
+          .forEach(el => el.classList.remove('active'));
+        document
+          .querySelector('.install-tab[data-tab="' + tab + '"]')
+          .classList.add('active');
+      }
 
-        function copyCommand(button, command) {
-            navigator.clipboard.writeText(command).then(() => {
-                const copyIcon = button.querySelector('.copy-icon');
-                const checkIcon = button.querySelector('.check-icon');
+      function copyCommand(button, command) {
+        navigator.clipboard.writeText(command).then(() => {
+          const copyIcon = button.querySelector('.copy-icon');
+          const checkIcon = button.querySelector('.check-icon');
 
-                copyIcon.classList.add('hidden');
-                checkIcon.classList.remove('hidden');
-                button.classList.add('copied');
+          copyIcon.classList.add('hidden');
+          checkIcon.classList.remove('hidden');
+          button.classList.add('copied');
 
-                setTimeout(() => {
-                    copyIcon.classList.remove('hidden');
-                    checkIcon.classList.add('hidden');
-                    button.classList.remove('copied');
-                }, 2000);
-            });
-        }
+          setTimeout(() => {
+            copyIcon.classList.remove('hidden');
+            checkIcon.classList.add('hidden');
+            button.classList.remove('copied');
+          }, 2000);
+        });
+      }
     </script>
-</body>
+  </body>
 </html>
