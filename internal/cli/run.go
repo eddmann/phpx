@@ -1,18 +1,21 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/eddmann/phpx/internal/cache"
 	"github.com/eddmann/phpx/internal/composer"
-	"github.com/eddmann/phpx/internal/exec"
+	"github.com/eddmann/phpx/internal/executor"
 	"github.com/eddmann/phpx/internal/index"
 	"github.com/eddmann/phpx/internal/metadata"
 	"github.com/eddmann/phpx/internal/php"
+	"github.com/eddmann/phpx/internal/sandbox"
 	"github.com/spf13/cobra"
 )
 
@@ -20,6 +23,17 @@ var (
 	runPHP        string
 	runPackages   string
 	runExtensions string
+
+	// Security flags
+	runSandbox   bool
+	runOffline   bool
+	runAllowHost string
+	runAllowRead string
+	runAllowWrite string
+	runAllowEnv  string
+	runMemory    int
+	runTimeout   int
+	runCPU       int
 )
 
 var runCmd = &cobra.Command{
@@ -37,7 +51,15 @@ The script can declare dependencies in a // phpx comment block:
 
     // Script code here...
 
-Use "-" to read from stdin.`,
+Use "-" to read from stdin.
+
+Security options:
+    --sandbox          Enable sandboxing (restricts filesystem access)
+    --offline          Block all network access
+    --allow-host       Allow network to specific hosts (comma-separated)
+    --allow-read       Allow reading additional paths (comma-separated)
+    --allow-write      Allow writing to additional paths (comma-separated)
+    --allow-env        Pass through environment variables (comma-separated)`,
 	Args:               cobra.MinimumNArgs(1),
 	DisableFlagParsing: false,
 	RunE:               runScript,
@@ -47,6 +69,17 @@ func init() {
 	runCmd.Flags().StringVar(&runPHP, "php", "", "PHP version constraint (overrides script)")
 	runCmd.Flags().StringVar(&runPackages, "packages", "", "comma-separated packages to add")
 	runCmd.Flags().StringVar(&runExtensions, "extensions", "", "comma-separated PHP extensions")
+
+	// Security flags
+	runCmd.Flags().BoolVar(&runSandbox, "sandbox", false, "enable sandboxing")
+	runCmd.Flags().BoolVar(&runOffline, "offline", false, "block all network access")
+	runCmd.Flags().StringVar(&runAllowHost, "allow-host", "", "allowed hosts (comma-separated)")
+	runCmd.Flags().StringVar(&runAllowRead, "allow-read", "", "additional readable paths (comma-separated)")
+	runCmd.Flags().StringVar(&runAllowWrite, "allow-write", "", "additional writable paths (comma-separated)")
+	runCmd.Flags().StringVar(&runAllowEnv, "allow-env", "", "environment variables to pass (comma-separated)")
+	runCmd.Flags().IntVar(&runMemory, "memory", 128, "memory limit in MB")
+	runCmd.Flags().IntVar(&runTimeout, "timeout", 30, "execution timeout in seconds")
+	runCmd.Flags().IntVar(&runCPU, "cpu", 30, "CPU time limit in seconds")
 
 	rootCmd.AddCommand(runCmd)
 }
@@ -125,7 +158,10 @@ func runScript(cmd *cobra.Command, args []string) error {
 
 	res, err := php.Resolve(idx, phpConstraint, extensions)
 	if err != nil {
-		return err
+		if phpConstraint != "" {
+			return fmt.Errorf("failed to resolve PHP for constraint %q: %w", phpConstraint, err)
+		}
+		return fmt.Errorf("failed to resolve PHP: %w", err)
 	}
 
 	if verbose {
@@ -183,23 +219,95 @@ func runScript(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// Execute script
-	if verbose {
-		fmt.Fprintf(os.Stderr, "[phpx] Executing: %s %s\n", res.Path, scriptPath)
+	// Determine sandbox
+	var sb sandbox.Sandbox = &sandbox.None{}
+	if runSandbox {
+		sb = sandbox.Detect()
+		if !sb.IsSandboxed() {
+			return fmt.Errorf("--sandbox requested but no sandbox is available on this system")
+		}
+	} else if runOffline || runAllowHost != "" {
+		sb = sandbox.DetectNetworkOnly()
+		if !sb.IsSandboxed() {
+			return fmt.Errorf("--offline/--allow-host requires network sandboxing, but no sandbox is available on this system")
+		}
 	}
 
-	exitCode, err := exec.RunScript(res.Path, scriptPath, autoloadPath, scriptArgs)
+	// Parse security options
+	var allowedHosts []string
+	if runAllowHost != "" {
+		allowedHosts = splitCSV(runAllowHost)
+	}
+
+	var readPaths []string
+	if runAllowRead != "" {
+		readPaths = splitCSV(runAllowRead)
+	}
+
+	var writePaths []string
+	if runAllowWrite != "" {
+		writePaths = splitCSV(runAllowWrite)
+	}
+
+	var allowedEnvVars []string
+	if runAllowEnv != "" {
+		allowedEnvVars = splitCSV(runAllowEnv)
+	}
+
+	// Determine network access
+	network := !runOffline
+
+	// Build executor options with real-time I/O streaming
+	opts := &executor.ScriptOptions{
+		ScriptPath:     scriptPath,
+		PHPBinary:      res.Path,
+		AutoloadFile:   autoloadPath,
+		Sandbox:        sb,
+		Network:        network,
+		AllowedHosts:   allowedHosts,
+		AllowedEnvVars: allowedEnvVars,
+		ReadPaths:      readPaths,
+		WritePaths:     writePaths,
+		MemoryMB:       runMemory,
+		Timeout:        time.Duration(runTimeout) * time.Second,
+		CPUSeconds:     runCPU,
+		Args:           scriptArgs,
+		Stdin:          os.Stdin,
+		Stdout:         os.Stdout,
+		Stderr:         os.Stderr,
+		Verbose:        verbose,
+	}
+
+	// Execute script using executor
+	runner := executor.NewScriptRunner(opts)
+	result, err := runner.Run(context.Background())
 	if err != nil {
 		return err
 	}
 
 	if verbose {
-		fmt.Fprintf(os.Stderr, "[phpx] Exit code: %d\n", exitCode)
+		fmt.Fprintf(os.Stderr, "[phpx] Exit code: %d\n", result.ExitCode)
 	}
 
-	if exitCode != 0 {
-		os.Exit(exitCode)
+	if result.ExitCode != 0 {
+		os.Exit(result.ExitCode)
 	}
 
 	return nil
+}
+
+// splitCSV splits a comma-separated string into a slice, trimming whitespace.
+func splitCSV(s string) []string {
+	if s == "" {
+		return nil
+	}
+	parts := strings.Split(s, ",")
+	result := make([]string, 0, len(parts))
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		if p != "" {
+			result = append(result, p)
+		}
+	}
+	return result
 }

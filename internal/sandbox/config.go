@@ -1,0 +1,44 @@
+package sandbox
+
+import (
+	"io"
+	"time"
+)
+
+// Config holds sandbox configuration.
+type Config struct {
+	// Network settings
+	Network         bool     // Allow network access (via proxy)
+	AllowedHosts    []string // Allowed hosts for proxy
+	ProxySocketPath string   // Unix socket path for proxy (Linux)
+	ProxyPort       int      // TCP port for proxy (macOS/fallback)
+
+	// Filesystem settings
+	ReadablePaths []string // Additional paths to allow reading
+	WritablePaths []string // Additional paths to allow writing
+	WorkDir       string   // Working directory
+	TempDir       string   // Temporary directory for execution
+
+	// Resource limits
+	MemoryMB   int           // Memory limit in MB
+	Timeout    time.Duration // Execution timeout
+	CPUSeconds int           // CPU time limit
+
+	// PHP settings
+	PHPBinary    string   // Path to PHP binary
+	AutoloadFile string   // Path to autoload.php
+	ScriptPath   string   // Path to script to execute
+	ScriptArgs   []string // Arguments to pass to script
+
+	// Environment
+	Env            []string // Environment variables to pass (proxy vars, etc.)
+	AllowedEnvVars []string // Additional env vars to pass from host (--allow-env flag)
+
+	// I/O streams - if set, output streams directly instead of buffering
+	Stdin  io.Reader // Standard input (nil = no input)
+	Stdout io.Writer // Standard output (nil = buffer to Result.Stdout)
+	Stderr io.Writer // Standard error (nil = buffer to Result.Stderr)
+
+	// Output
+	Verbose bool
+}

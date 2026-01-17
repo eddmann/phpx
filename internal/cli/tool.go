@@ -1,16 +1,19 @@
 package cli
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/eddmann/phpx/internal/cache"
 	"github.com/eddmann/phpx/internal/composer"
-	"github.com/eddmann/phpx/internal/exec"
+	"github.com/eddmann/phpx/internal/executor"
 	"github.com/eddmann/phpx/internal/index"
 	"github.com/eddmann/phpx/internal/php"
+	"github.com/eddmann/phpx/internal/sandbox"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +21,17 @@ var (
 	toolPHP        string
 	toolExtensions string
 	toolFrom       string
+
+	// Security flags
+	toolSandbox    bool
+	toolOffline    bool
+	toolAllowHost  string
+	toolAllowRead  string
+	toolAllowWrite string
+	toolAllowEnv   string
+	toolMemory     int
+	toolTimeout    int
+	toolCPU        int
 )
 
 var toolCmd = &cobra.Command{
@@ -40,7 +54,15 @@ Common aliases are supported:
     rector       → rector/rector
     phpcs        → squizlabs/php_codesniffer
     laravel      → laravel/installer
-    psysh        → psy/psysh`,
+    psysh        → psy/psysh
+
+Security options:
+    --sandbox          Enable sandboxing (restricts filesystem access)
+    --offline          Block all network access
+    --allow-host       Allow network to specific hosts (comma-separated)
+    --allow-read       Allow reading additional paths (comma-separated)
+    --allow-write      Allow writing to additional paths (comma-separated)
+    --allow-env        Pass through environment variables (comma-separated)`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: runTool,
 }
@@ -49,6 +71,17 @@ func init() {
 	toolCmd.Flags().StringVar(&toolPHP, "php", "", "PHP version constraint")
 	toolCmd.Flags().StringVar(&toolExtensions, "extensions", "", "comma-separated PHP extensions")
 	toolCmd.Flags().StringVar(&toolFrom, "from", "", "explicit package name when binary differs")
+
+	// Security flags
+	toolCmd.Flags().BoolVar(&toolSandbox, "sandbox", false, "enable sandboxing")
+	toolCmd.Flags().BoolVar(&toolOffline, "offline", false, "block all network access")
+	toolCmd.Flags().StringVar(&toolAllowHost, "allow-host", "", "allowed hosts (comma-separated)")
+	toolCmd.Flags().StringVar(&toolAllowRead, "allow-read", "", "additional readable paths (comma-separated)")
+	toolCmd.Flags().StringVar(&toolAllowWrite, "allow-write", "", "additional writable paths (comma-separated)")
+	toolCmd.Flags().StringVar(&toolAllowEnv, "allow-env", "", "environment variables to pass (comma-separated)")
+	toolCmd.Flags().IntVar(&toolMemory, "memory", 256, "memory limit in MB")
+	toolCmd.Flags().IntVar(&toolTimeout, "timeout", 300, "execution timeout in seconds")
+	toolCmd.Flags().IntVar(&toolCPU, "cpu", 300, "CPU time limit in seconds")
 
 	rootCmd.AddCommand(toolCmd)
 }
@@ -134,7 +167,10 @@ func runTool(cmd *cobra.Command, args []string) error {
 
 	res, err := php.Resolve(idx, phpConstraint, extensions)
 	if err != nil {
-		return err
+		if phpConstraint != "" {
+			return fmt.Errorf("failed to resolve PHP for constraint %q: %w", phpConstraint, err)
+		}
+		return fmt.Errorf("failed to resolve PHP: %w", err)
 	}
 
 	if verbose {
@@ -183,22 +219,85 @@ func runTool(cmd *cobra.Command, args []string) error {
 		fmt.Fprintln(os.Stderr, "[phpx] Tool cached")
 	}
 
-	// Execute tool
-	if verbose {
-		fmt.Fprintf(os.Stderr, "[phpx] Executing: %s %s\n", res.Path, binaryPath)
+	// Determine sandbox
+	var sb sandbox.Sandbox = &sandbox.None{}
+	if toolSandbox {
+		sb = sandbox.Detect()
+		if !sb.IsSandboxed() {
+			return fmt.Errorf("--sandbox requested but no sandbox is available on this system")
+		}
+	} else if toolOffline || toolAllowHost != "" {
+		sb = sandbox.DetectNetworkOnly()
+		if !sb.IsSandboxed() {
+			return fmt.Errorf("--offline/--allow-host requires network sandboxing, but no sandbox is available on this system")
+		}
 	}
 
-	exitCode, err := exec.RunTool(res.Path, toolPath, binary, toolArgs)
+	// Parse security options
+	var allowedHosts []string
+	if toolAllowHost != "" {
+		allowedHosts = splitCSV(toolAllowHost)
+	}
+
+	var readPaths []string
+	if toolAllowRead != "" {
+		readPaths = splitCSV(toolAllowRead)
+	}
+
+	var writePaths []string
+	if toolAllowWrite != "" {
+		writePaths = splitCSV(toolAllowWrite)
+	}
+
+	var allowedEnvVars []string
+	if toolAllowEnv != "" {
+		allowedEnvVars = splitCSV(toolAllowEnv)
+	}
+
+	// Determine network access
+	network := !toolOffline
+
+	// Get current working directory
+	workDir, err := os.Getwd()
+	if err != nil {
+		workDir = "/"
+	}
+
+	// Build executor options with real-time I/O streaming
+	opts := &executor.ToolOptions{
+		PHPBinary:      res.Path,
+		ToolDir:        toolPath,
+		BinaryName:     binary,
+		Sandbox:        sb,
+		Network:        network,
+		AllowedHosts:   allowedHosts,
+		AllowedEnvVars: allowedEnvVars,
+		ReadPaths:      readPaths,
+		WritePaths:     writePaths,
+		MemoryMB:       toolMemory,
+		Timeout:        time.Duration(toolTimeout) * time.Second,
+		CPUSeconds:     toolCPU,
+		Args:           toolArgs,
+		WorkDir:        workDir,
+		Stdin:          os.Stdin,
+		Stdout:         os.Stdout,
+		Stderr:         os.Stderr,
+		Verbose:        verbose,
+	}
+
+	// Execute tool using executor
+	runner := executor.NewToolRunner(opts)
+	result, err := runner.Run(context.Background())
 	if err != nil {
 		return err
 	}
 
 	if verbose {
-		fmt.Fprintf(os.Stderr, "[phpx] Exit code: %d\n", exitCode)
+		fmt.Fprintf(os.Stderr, "[phpx] Exit code: %d\n", result.ExitCode)
 	}
 
-	if exitCode != 0 {
-		os.Exit(exitCode)
+	if result.ExitCode != 0 {
+		os.Exit(result.ExitCode)
 	}
 
 	return nil

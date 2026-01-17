@@ -12,6 +12,7 @@ phpx brings patterns established in other ecosystems to PHP - ephemeral tool exe
 - **Ephemeral tools** - run PHPStan, Psalm, PHP-CS-Fixer without polluting your global environment
 - **Automatic PHP management** - downloads pre-built static PHP binaries matching your version constraints
 - **Smart caching** - PHP binaries, dependencies, and tools are cached for fast subsequent runs
+- **Sandboxing & isolation** - run scripts in isolated environments with controlled filesystem, network, and resource limits
 
 ## Installation
 
@@ -143,6 +144,15 @@ phpx <script.php> [-- args...]  # Shorthand
 | `--php`        |       | PHP version constraint (overrides script) |
 | `--packages`   |       | Comma-separated packages to add           |
 | `--extensions` |       | Comma-separated PHP extensions            |
+| `--sandbox`    |       | Enable sandboxing (restricts filesystem)  |
+| `--offline`    |       | Block all network access                  |
+| `--allow-host` |       | Allow network to specific hosts           |
+| `--allow-read` |       | Additional readable paths                 |
+| `--allow-write`|       | Additional writable paths                 |
+| `--allow-env`  |       | Environment variables to pass             |
+| `--memory`     |       | Memory limit in MB (default: 128)         |
+| `--timeout`    |       | Execution timeout in seconds (default: 30)|
+| `--cpu`        |       | CPU time limit in seconds (default: 30)   |
 | `--verbose`    | `-v`  | Show detailed output                      |
 | `--quiet`      | `-q`  | Suppress phpx output                      |
 
@@ -154,13 +164,22 @@ Run a Composer package's binary without global installation.
 phpx tool <package[@version]> [-- args...]
 ```
 
-| Flag           | Short | Description                               |
-| -------------- | ----- | ----------------------------------------- |
-| `--php`        |       | PHP version constraint                    |
-| `--extensions` |       | Comma-separated PHP extensions            |
-| `--from`       |       | Explicit package name when binary differs |
-| `--verbose`    | `-v`  | Show detailed output                      |
-| `--quiet`      | `-q`  | Suppress phpx output                      |
+| Flag           | Short | Description                                |
+| -------------- | ----- | ------------------------------------------ |
+| `--php`        |       | PHP version constraint                     |
+| `--extensions` |       | Comma-separated PHP extensions             |
+| `--from`       |       | Explicit package name when binary differs  |
+| `--sandbox`    |       | Enable sandboxing (restricts filesystem)   |
+| `--offline`    |       | Block all network access                   |
+| `--allow-host` |       | Allow network to specific hosts            |
+| `--allow-read` |       | Additional readable paths                  |
+| `--allow-write`|       | Additional writable paths                  |
+| `--allow-env`  |       | Environment variables to pass              |
+| `--memory`     |       | Memory limit in MB (default: 256)          |
+| `--timeout`    |       | Execution timeout in seconds (default: 300)|
+| `--cpu`        |       | CPU time limit in seconds (default: 300)   |
+| `--verbose`    | `-v`  | Show detailed output                       |
+| `--quiet`      | `-q`  | Suppress phpx output                       |
 
 **Version specifiers:**
 
@@ -245,6 +264,52 @@ The tier is selected automatically based on required extensions.
 **Dependencies** are installed via Composer into content-addressed cache directories at `~/.phpx/deps/{hash}/`.
 
 **Tools** are installed once and cached at `~/.phpx/tools/{package}-{version}/`.
+
+## Security & Sandboxing
+
+phpx supports running scripts and tools in isolated environments with controlled resource limits.
+
+### Sandbox Modes
+
+**Filesystem sandboxing** (`--sandbox`):
+- macOS: Uses `sandbox-exec` profiles
+- Linux: Uses `bubblewrap` or `nsjail` (if available)
+- Restricts filesystem access to only what the script needs
+
+**Network isolation** (`--offline`, `--allow-host`):
+
+```bash
+# Completely block network access
+phpx run script.php --offline
+
+# Allow only specific hosts
+phpx run script.php --allow-host api.example.com,cdn.example.com
+```
+
+### Resource Limits
+
+```bash
+# Run with 64MB memory, 10 second timeout, 5 second CPU limit
+phpx run script.php --sandbox --memory 64 --timeout 10 --cpu 5
+```
+
+### Filesystem Access
+
+```bash
+# Allow reading from additional paths
+phpx run script.php --sandbox --allow-read /path/to/data
+
+# Allow writing to additional paths
+phpx run script.php --sandbox --allow-write /path/to/output
+```
+
+### Environment Variables
+
+By default, sandbox mode filters environment variables to avoid leaking secrets. Use `--allow-env` to pass specific variables:
+
+```bash
+phpx run script.php --sandbox --allow-env API_KEY,DEBUG
+```
 
 ## Cache Structure
 

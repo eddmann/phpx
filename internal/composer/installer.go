@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/eddmann/phpx/internal/cache"
+	"github.com/eddmann/phpx/internal/util"
 )
 
 // composerJSON is the structure for composer.json.
@@ -72,7 +73,8 @@ func InstallDeps(phpPath, composerPath string, packages []string, destDir string
 
 	cmd := exec.Command(phpPath, args...)
 	cmd.Dir = destDir
-	cmd.Env = append(os.Environ(), "COMPOSER_HOME="+filepath.Join(destDir, ".composer"))
+	// Use filtered environment to avoid leaking secrets to package install scripts
+	cmd.Env = append(util.FilterEnv(nil), "COMPOSER_HOME="+filepath.Join(destDir, ".composer"))
 
 	if verbose {
 		cmd.Stdout = os.Stdout
@@ -80,7 +82,7 @@ func InstallDeps(phpPath, composerPath string, packages []string, destDir string
 	}
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to install dependencies: %w", err)
+		return fmt.Errorf("failed to install packages %v: %w", packages, err)
 	}
 
 	return nil
@@ -135,7 +137,8 @@ func InstallTool(phpPath, composerPath string, pkg, version, destDir string, ver
 
 	cmd := exec.Command(phpPath, args...)
 	cmd.Dir = destDir
-	cmd.Env = append(os.Environ(), "COMPOSER_HOME="+filepath.Join(destDir, ".composer"))
+	// Use filtered environment to avoid leaking secrets to package install scripts
+	cmd.Env = append(util.FilterEnv(nil), "COMPOSER_HOME="+filepath.Join(destDir, ".composer"))
 
 	if verbose {
 		cmd.Stdout = os.Stdout
@@ -143,7 +146,7 @@ func InstallTool(phpPath, composerPath string, pkg, version, destDir string, ver
 	}
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to install dependencies: %w", err)
+		return fmt.Errorf("failed to install tool %s@%s: %w", pkg, version, err)
 	}
 
 	return nil
@@ -157,20 +160,3 @@ func parsePackage(pkg string) (name, constraint string) {
 	return pkg, ""
 }
 
-// AutoloadPath returns the path to autoload.php for a deps hash.
-func AutoloadPath(hash string) (string, error) {
-	depsPath, err := cache.DepsPath(hash)
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(depsPath, "vendor", "autoload.php"), nil
-}
-
-// ToolBinaryPath returns the path to a tool binary.
-func ToolBinaryPath(pkg, version, binary string) (string, error) {
-	toolPath, err := cache.ToolPath(pkg, version)
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(toolPath, "vendor", "bin", binary), nil
-}
