@@ -19,7 +19,12 @@ foreach ($urls as $url) {
     $host = parse_url($url, PHP_URL_HOST);
     try {
         $response = $client->request('GET', $url);
-        echo "[allowed] {$host}\n";
+        $status = $response->getStatusCode();
+        if ($status === 403) {
+            echo "[blocked] {$host}\n";
+        } else {
+            echo "[allowed] {$host}\n";
+        }
     } catch (TransportException $e) {
         echo "[blocked] {$host}\n";
     }

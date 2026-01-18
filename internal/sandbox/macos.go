@@ -102,6 +102,9 @@ func (m *MacOS) generateProfile(cfg *Config) string {
 	// MINIMAL READ ACCESS
 	// Static PHP binary needs very little system access
 	// ============================================================
+	profile.WriteString(";; Root directory (required for path resolution)\n")
+	profile.WriteString("(allow file-read* (literal \"/\"))\n\n")
+
 	profile.WriteString(";; Minimal device access\n")
 	profile.WriteString("(allow file-read* (literal \"/dev/null\"))\n")
 	profile.WriteString("(allow file-read* (literal \"/dev/urandom\"))\n")
@@ -121,6 +124,10 @@ func (m *MacOS) generateProfile(cfg *Config) string {
 		profile.WriteString("(allow file-read* (literal \"/private/etc/resolv.conf\"))\n")
 		profile.WriteString("(allow file-read* (literal \"/etc/hosts\"))\n")
 		profile.WriteString("(allow file-read* (literal \"/private/etc/hosts\"))\n\n")
+
+		profile.WriteString(";; SSL certificates (required for HTTPS)\n")
+		profile.WriteString("(allow file-read* (literal \"/etc\"))\n")
+		profile.WriteString("(allow file-read* (subpath \"/private/etc/ssl\"))\n\n")
 	}
 
 	// PHP binary (exact path only)
@@ -146,7 +153,12 @@ func (m *MacOS) generateProfile(cfg *Config) string {
 	if len(cfg.ReadablePaths) > 0 {
 		profile.WriteString(";; Additional readable paths (--allow-read)\n")
 		for _, p := range cfg.ReadablePaths {
-			profile.WriteString(fmt.Sprintf("(allow file-read* (subpath \"%s\"))\n", seatbeltEscape(resolvePath(p))))
+			resolved := resolvePath(p)
+			// If path is a symlink, allow both the symlink and resolved path
+			if p != resolved {
+				profile.WriteString(fmt.Sprintf("(allow file-read* (literal \"%s\"))\n", seatbeltEscape(p)))
+			}
+			profile.WriteString(fmt.Sprintf("(allow file-read* (subpath \"%s\"))\n", seatbeltEscape(resolved)))
 		}
 		profile.WriteString("\n")
 	}
@@ -162,9 +174,14 @@ func (m *MacOS) generateProfile(cfg *Config) string {
 	if len(cfg.WritablePaths) > 0 {
 		profile.WriteString(";; Additional writable paths (--allow-write)\n")
 		for _, p := range cfg.WritablePaths {
-			profile.WriteString(fmt.Sprintf("(allow file-write* (subpath \"%s\"))\n", seatbeltEscape(resolvePath(p))))
+			resolved := resolvePath(p)
+			// If path is a symlink, allow both the symlink and resolved path
+			if p != resolved {
+				profile.WriteString(fmt.Sprintf("(allow file-read* (literal \"%s\"))\n", seatbeltEscape(p)))
+			}
+			profile.WriteString(fmt.Sprintf("(allow file-write* (subpath \"%s\"))\n", seatbeltEscape(resolved)))
 			// Also need read access to write
-			profile.WriteString(fmt.Sprintf("(allow file-read* (subpath \"%s\"))\n", seatbeltEscape(resolvePath(p))))
+			profile.WriteString(fmt.Sprintf("(allow file-read* (subpath \"%s\"))\n", seatbeltEscape(resolved)))
 		}
 		profile.WriteString("\n")
 	}
