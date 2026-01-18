@@ -24,6 +24,11 @@ phpx 01-hello-world.php
 | 09 | `09-http-client.php` | HTTP requests with Symfony |
 | 10 | `10-json-processing.php` | Process JSON from stdin/file |
 | 11 | `11-cli-app.php` | Full CLI app with Symfony Console |
+| 12 | `12-sandbox-basic.php` | Basic sandboxing with resource limits |
+| 13 | `13-sandbox-offline.php` | Network isolation (offline mode) |
+| 14 | `14-sandbox-allow-host.php` | Host-based network filtering |
+| 15 | `15-sandbox-filesystem.php` | Filesystem path permissions |
+| 16 | `16-sandbox-env.php` | Environment variable filtering |
 
 ## PHP Build Tiers
 
@@ -58,7 +63,37 @@ phpx 09-http-client.php
 echo '{"name":"test","count":42}' | phpx 10-json-processing.php -- -
 phpx 11-cli-app.php -- --name=Developer
 phpx 11-cli-app.php -- --name=Developer --shout
+
+# Security/sandbox examples
+phpx 12-sandbox-basic.php --sandbox --memory 64 --timeout 10 --cpu 5
+phpx 13-sandbox-offline.php --offline
+phpx 14-sandbox-allow-host.php --allow-host httpbin.org
+echo "test input" > /tmp/phpx-input.txt && phpx 15-sandbox-filesystem.php --sandbox --allow-read /tmp --allow-write /tmp
+API_KEY=secret DEBUG=1 phpx 16-sandbox-env.php --sandbox --allow-env API_KEY,DEBUG
 ```
+
+## Security & Sandboxing
+
+phpx supports running scripts in isolated environments with controlled resource limits.
+
+### Sandbox Flags
+
+| Flag | Description |
+|------|-------------|
+| `--sandbox` | Enable filesystem sandboxing |
+| `--offline` | Block all network access |
+| `--allow-host` | Allow network to specific hosts (comma-separated) |
+| `--allow-read` | Additional readable paths (comma-separated) |
+| `--allow-write` | Additional writable paths (comma-separated) |
+| `--allow-env` | Environment variables to pass through (comma-separated) |
+| `--memory` | Memory limit in MB (default: 128 for scripts, 256 for tools) |
+| `--timeout` | Execution timeout in seconds (default: 30 for scripts, 300 for tools) |
+| `--cpu` | CPU time limit in seconds (default: 30 for scripts, 300 for tools) |
+
+### Platform Support
+
+- **macOS**: Uses `sandbox-exec` profiles
+- **Linux**: Uses `bubblewrap` (bwrap) or `nsjail` if available
 
 ## Script Metadata
 
