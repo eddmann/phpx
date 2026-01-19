@@ -8,7 +8,6 @@ import (
 type DomainFilter struct {
 	allowedDomains  []string
 	wildcardDomains []string // Domains starting with *.
-	blockedDomains  []string
 	allowAll        bool
 }
 
@@ -48,13 +47,6 @@ func (f *DomainFilter) IsAllowed(host string) bool {
 		host = host[:idx]
 	}
 	host = strings.ToLower(host)
-
-	// Check block list first
-	for _, blocked := range f.blockedDomains {
-		if host == blocked || strings.HasSuffix(host, "."+blocked) {
-			return false
-		}
-	}
 
 	// Allow all mode
 	if f.allowAll {
