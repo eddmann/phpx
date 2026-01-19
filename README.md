@@ -223,28 +223,23 @@ Print version information.
 
 ## Examples
 
-The `examples/` directory contains progressive examples:
-
-| Example                    | Description                       |
-| -------------------------- | --------------------------------- |
-| `01-hello-world.php`       | Simplest script, no dependencies  |
-| `02-php-version.php`       | Display PHP environment info      |
-| `03-cli-arguments.php`     | Handle command-line arguments     |
-| `04-single-package.php`    | One dependency (Carbon)           |
-| `05-multiple-packages.php` | Multiple dependencies             |
-| `06-php-constraint.php`    | Require specific PHP version      |
-| `07-common-extensions.php` | Check common extensions           |
-| `08-bulk-extensions.php`   | Use intl extension                |
-| `09-http-client.php`       | HTTP requests with Symfony        |
-| `10-json-processing.php`   | JSON processing from stdin        |
-| `11-cli-app.php`           | Full CLI app with Symfony Console |
+The `examples/` directory contains 16 progressive examples demonstrating all phpx features - from basic script execution through inline dependencies, PHP version constraints, extensions, HTTP clients, CLI apps, and sandboxing.
 
 ```bash
-# Run examples
+# Simple dependency usage
 phpx examples/04-single-package.php
-phpx examples/11-cli-app.php -- greet --name=World
-echo '{"test": 123}' | phpx examples/10-json-processing.php -- -
+
+# Full CLI app with Symfony Console
+phpx examples/11-cli-app.php -- --name=World --shout
+
+# Sandboxed execution with resource limits
+phpx examples/12-sandbox-basic.php --sandbox --memory 64 --timeout 10
+
+# Network filtering (allow specific hosts)
+phpx examples/14-sandbox-allow-host.php --allow-host httpbin.org
 ```
+
+See [examples/README.md](examples/README.md) for the complete list and detailed usage instructions.
 
 ## How It Works
 
