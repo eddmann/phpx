@@ -1,6 +1,11 @@
+#!/usr/bin/env phpx
 <?php
 // phpx
 // packages = ["symfony/var-dumper:^7.0"]
+
+// Examples:
+//   echo '{"key": "value"}' | phpx 10-json-processing.php
+//   phpx 10-json-processing.php data.json
 
 use Symfony\Component\VarDumper\VarDumper;
 

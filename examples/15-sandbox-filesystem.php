@@ -1,7 +1,8 @@
+#!/usr/bin/env phpx
 <?php
-// Grants specific path access:
+// Example:
 //   echo "hello" > /tmp/phpx-test.txt
-//   phpx run 15-sandbox-filesystem.php --sandbox --allow-read /tmp --allow-write /tmp
+//   phpx 15-sandbox-filesystem.php --sandbox --allow-read /tmp --allow-write /tmp
 
 $inputFile = '/tmp/phpx-test.txt';
 $outputFile = '/tmp/phpx-output.txt';

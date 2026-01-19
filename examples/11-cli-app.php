@@ -1,7 +1,11 @@
+#!/usr/bin/env phpx
 <?php
 // phpx
 // php = ">=8.2"
 // packages = ["symfony/console:^7.0"]
+
+// Example:
+//   phpx 11-cli-app.php -- --name World --shout
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;

@@ -1,3 +1,4 @@
+#!/usr/bin/env phpx
 <?php
 // phpx
 // php = "^8.2"

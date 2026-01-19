@@ -1,9 +1,10 @@
+#!/usr/bin/env phpx
 <?php
 // phpx
 // packages = ["symfony/http-client:^7.0"]
 
-// Allows only specific hosts:
-//   phpx run 14-sandbox-allow-host.php --allow-host httpbin.org
+// Example:
+//   phpx 14-sandbox-allow-host.php --allow-host httpbin.org
 
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Exception\TransportException;

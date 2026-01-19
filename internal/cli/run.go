@@ -65,22 +65,27 @@ Security options:
 	RunE:               runScript,
 }
 
-func init() {
-	runCmd.Flags().StringVar(&runPHP, "php", "", "PHP version constraint (overrides script)")
-	runCmd.Flags().StringVar(&runPackages, "packages", "", "comma-separated packages to add")
-	runCmd.Flags().StringVar(&runExtensions, "extensions", "", "comma-separated PHP extensions")
+// addScriptFlags registers script execution flags on the given command.
+// Called for both the root command and the run subcommand.
+func addScriptFlags(cmd *cobra.Command) {
+	cmd.Flags().StringVar(&runPHP, "php", "", "PHP version constraint (overrides script)")
+	cmd.Flags().StringVar(&runPackages, "packages", "", "comma-separated packages to add")
+	cmd.Flags().StringVar(&runExtensions, "extensions", "", "comma-separated PHP extensions")
 
 	// Security flags
-	runCmd.Flags().BoolVar(&runSandbox, "sandbox", false, "enable sandboxing")
-	runCmd.Flags().BoolVar(&runOffline, "offline", false, "block all network access")
-	runCmd.Flags().StringVar(&runAllowHost, "allow-host", "", "allowed hosts (comma-separated)")
-	runCmd.Flags().StringVar(&runAllowRead, "allow-read", "", "additional readable paths (comma-separated)")
-	runCmd.Flags().StringVar(&runAllowWrite, "allow-write", "", "additional writable paths (comma-separated)")
-	runCmd.Flags().StringVar(&runAllowEnv, "allow-env", "", "environment variables to pass (comma-separated)")
-	runCmd.Flags().IntVar(&runMemory, "memory", 128, "memory limit in MB")
-	runCmd.Flags().IntVar(&runTimeout, "timeout", 30, "execution timeout in seconds")
-	runCmd.Flags().IntVar(&runCPU, "cpu", 30, "CPU time limit in seconds")
+	cmd.Flags().BoolVar(&runSandbox, "sandbox", false, "enable sandboxing")
+	cmd.Flags().BoolVar(&runOffline, "offline", false, "block all network access")
+	cmd.Flags().StringVar(&runAllowHost, "allow-host", "", "allowed hosts (comma-separated)")
+	cmd.Flags().StringVar(&runAllowRead, "allow-read", "", "additional readable paths (comma-separated)")
+	cmd.Flags().StringVar(&runAllowWrite, "allow-write", "", "additional writable paths (comma-separated)")
+	cmd.Flags().StringVar(&runAllowEnv, "allow-env", "", "environment variables to pass (comma-separated)")
+	cmd.Flags().IntVar(&runMemory, "memory", 128, "memory limit in MB")
+	cmd.Flags().IntVar(&runTimeout, "timeout", 30, "execution timeout in seconds")
+	cmd.Flags().IntVar(&runCPU, "cpu", 30, "CPU time limit in seconds")
+}
 
+func init() {
+	addScriptFlags(runCmd)
 	rootCmd.AddCommand(runCmd)
 }
 

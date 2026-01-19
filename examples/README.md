@@ -150,7 +150,7 @@ phpx tool psysh
 
 ## CLI Flags
 
-### For `phpx run`
+### For scripts
 
 | Flag | Description |
 |------|-------------|
@@ -211,5 +211,5 @@ phpx cache refresh
 Read PHP from stdin:
 
 ```bash
-echo '<?php echo PHP_VERSION . "\n";' | phpx run -
+echo '<?php echo PHP_VERSION . "\n";' | phpx -
 ```

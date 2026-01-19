@@ -1,3 +1,4 @@
+#!/usr/bin/env phpx
 <?php
 // phpx
 // packages = ["symfony/http-client:^7.0"]

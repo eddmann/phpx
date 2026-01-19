@@ -1,9 +1,10 @@
+#!/usr/bin/env phpx
 <?php
 // phpx
 // packages = ["symfony/http-client:^7.0"]
 
-// Blocks network access:
-//   phpx run 13-sandbox-offline.php --offline
+// Example:
+//   phpx 13-sandbox-offline.php --offline
 
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\Exception\TransportException;
