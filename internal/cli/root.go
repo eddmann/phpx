@@ -1,7 +1,15 @@
 package cli
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
+)
+
+var (
+	Version   = "dev"
+	GitCommit = "unknown"
+	BuildTime = "unknown"
 )
 
 const logo = `
@@ -48,6 +56,7 @@ func init() {
 	// Register script execution flags on root command too
 	addScriptFlags(rootCmd)
 
+	rootCmd.SetVersionTemplate(fmt.Sprintf("phpx %s (commit: %s, built: %s)\n", Version, GitCommit, BuildTime))
 	rootCmd.SetHelpTemplate(logo + `{{with (or .Long .Short)}}{{. | trimTrailingWhitespaces}}
 
 {{end}}{{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}`)
