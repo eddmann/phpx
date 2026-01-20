@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2026-01-20
+
+### Changed
+
+- Version information now displayed via `--version` flag instead of a separate subcommand
+
 ## [0.0.5] - 2026-01-20
 
 ### Changed
@@ -57,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Pages landing page with documentation
 - CI/CD workflows for testing and releases
 
+[0.0.6]: https://github.com/eddmann/phpx/compare/v0.0.5...v0.0.6
 [0.0.5]: https://github.com/eddmann/phpx/compare/v0.0.4...v0.0.5
 [0.0.4]: https://github.com/eddmann/phpx/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/eddmann/phpx/compare/v0.0.2...v0.0.3
