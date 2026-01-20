@@ -11,7 +11,8 @@ type Config struct {
 	Network         bool     // Allow network access (via proxy)
 	AllowedHosts    []string // Allowed hosts for proxy
 	ProxySocketPath string   // Unix socket path for proxy (Linux)
-	ProxyPort       int      // TCP port for proxy (macOS/fallback)
+	ProxyPort       int      // TCP port for HTTP proxy (macOS/fallback)
+	ProxySOCKS5Port int      // TCP port for SOCKS5 proxy
 
 	// Filesystem settings
 	ReadablePaths []string // Additional paths to allow reading

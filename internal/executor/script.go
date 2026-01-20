@@ -63,6 +63,7 @@ func (r *ScriptRunner) Run(ctx context.Context) (*sandbox.Result, error) {
 	var proxyEnv []string
 	var proxySocketPath string
 	var proxyPort int
+	var proxySOCKS5Port int
 
 	needsProxy := sb.IsSandboxed() && r.opts.Network
 
@@ -80,6 +81,7 @@ func (r *ScriptRunner) Run(ctx context.Context) (*sandbox.Result, error) {
 		proxyEnv = proxyMgr.EnvVars()
 		proxySocketPath = proxyMgr.SocketPath()
 		proxyPort = proxyMgr.Port()
+		proxySOCKS5Port = proxyMgr.SOCKS5Port()
 	}
 
 	// Prepare sandbox config
@@ -88,6 +90,7 @@ func (r *ScriptRunner) Run(ctx context.Context) (*sandbox.Result, error) {
 		AllowedHosts:    r.opts.AllowedHosts,
 		ProxySocketPath: proxySocketPath,
 		ProxyPort:       proxyPort,
+		ProxySOCKS5Port: proxySOCKS5Port,
 		ReadablePaths:   r.opts.ReadPaths,
 		WritablePaths:   r.opts.WritePaths,
 		MemoryMB:        r.opts.MemoryMB,

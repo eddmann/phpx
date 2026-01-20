@@ -190,10 +190,13 @@ func (m *MacOS) generateProfile(cfg *Config) string {
 	// NETWORK ACCESS
 	// ============================================================
 	if cfg.Network {
-		// Restrict to proxy port only - no fallback to wildcard localhost
+		// Restrict to proxy ports only - no fallback to wildcard localhost
 		profile.WriteString(";; Network: proxy connections only\n")
 		if cfg.ProxyPort > 0 {
 			profile.WriteString(fmt.Sprintf("(allow network-outbound (remote ip \"localhost:%d\"))\n", cfg.ProxyPort))
+		}
+		if cfg.ProxySOCKS5Port > 0 {
+			profile.WriteString(fmt.Sprintf("(allow network-outbound (remote ip \"localhost:%d\"))\n", cfg.ProxySOCKS5Port))
 		}
 		// Always allow Unix socket connections for proxy
 		profile.WriteString("(allow network-outbound (remote unix-socket))\n")

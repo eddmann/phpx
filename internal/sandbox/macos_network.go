@@ -79,6 +79,9 @@ func (m *MacOSNetwork) generateProfile(cfg *Config) string {
 		if cfg.ProxyPort > 0 {
 			profile.WriteString(fmt.Sprintf("(allow network-outbound (remote ip \"localhost:%d\"))\n", cfg.ProxyPort))
 		}
+		if cfg.ProxySOCKS5Port > 0 {
+			profile.WriteString(fmt.Sprintf("(allow network-outbound (remote ip \"localhost:%d\"))\n", cfg.ProxySOCKS5Port))
+		}
 		// Allow Unix socket connections for proxy
 		profile.WriteString("(allow network-outbound (remote unix-socket))\n")
 	}

@@ -95,6 +95,14 @@ func (m *Manager) Port() int {
 	return 0
 }
 
+// SOCKS5Port returns the SOCKS5 proxy port.
+func (m *Manager) SOCKS5Port() int {
+	if m.socks5Proxy != nil {
+		return m.socks5Proxy.Port
+	}
+	return 0
+}
+
 // SocketPath returns the Unix socket path (Linux only).
 func (m *Manager) SocketPath() string {
 	return m.socketPath
