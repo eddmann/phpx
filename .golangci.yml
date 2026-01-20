@@ -2,3 +2,9 @@ version: "2"
 
 run:
   tests: false
+
+linters:
+  enable:
+    - unused
+    - unparam
+    - ineffassign
