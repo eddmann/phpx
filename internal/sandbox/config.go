@@ -18,7 +18,6 @@ type Config struct {
 	ReadablePaths []string // Additional paths to allow reading
 	WritablePaths []string // Additional paths to allow writing
 	WorkDir       string   // Working directory
-	TempDir       string   // Temporary directory for execution
 
 	// Resource limits
 	MemoryMB   int           // Memory limit in MB
