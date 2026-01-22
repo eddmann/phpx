@@ -880,36 +880,36 @@
           <!-- Three feature highlights -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
             <!-- Filesystem -->
-            <div class="security-feature rounded-xl p-5 text-center">
-              <div class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 mb-3">
-                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="security-feature rounded-2xl p-6 md:p-8 text-center">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 mb-5">
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 class="text-lg font-semibold text-gray-200 mb-2">Filesystem Isolation</h3>
-              <p class="text-base text-gray-400">Restrict access to only what scripts need</p>
+              <h3 class="text-xl font-semibold text-gray-100 mb-3">Filesystem Isolation</h3>
+              <p class="text-gray-400 leading-relaxed">Restrict access to only what scripts need</p>
             </div>
 
             <!-- Network -->
-            <div class="security-feature rounded-xl p-5 text-center">
-              <div class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 mb-3">
-                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="security-feature rounded-2xl p-6 md:p-8 text-center">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 mb-5">
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 class="text-lg font-semibold text-gray-200 mb-2">Network Control</h3>
-              <p class="text-base text-gray-400">Block network or allow specific hosts</p>
+              <h3 class="text-xl font-semibold text-gray-100 mb-3">Network Control</h3>
+              <p class="text-gray-400 leading-relaxed">Block network or allow specific hosts</p>
             </div>
 
             <!-- Resources -->
-            <div class="security-feature rounded-xl p-5 text-center">
-              <div class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 mb-3">
-                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="security-feature rounded-2xl p-6 md:p-8 text-center">
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 mb-5">
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 class="text-lg font-semibold text-gray-200 mb-2">Resource Limits</h3>
-              <p class="text-base text-gray-400">Control memory, CPU, and execution time</p>
+              <h3 class="text-xl font-semibold text-gray-100 mb-3">Resource Limits</h3>
+              <p class="text-gray-400 leading-relaxed">Control memory, CPU, and execution time</p>
             </div>
           </div>
 
@@ -941,14 +941,14 @@
             </div>
 
             <!-- Tab content -->
-            <div class="sandbox-box rounded-xl">
+            <div class="sandbox-box rounded-xl transition-all duration-300">
               <!-- Filesystem -->
               <div id="sandbox-tab-filesystem" class="sandbox-content p-5">
                 <div class="font-mono text-sm overflow-x-auto">
                   <div class="whitespace-nowrap">
                     <span class="text-gray-500">$</span>
                     <span class="text-gray-200"> phpx script.php</span>
-                    <span class="text-ember"> --sandbox</span>
+                    <span class="text-purple-400"> --sandbox</span>
                     <span class="text-purple-400"> --allow-read</span>
                     <span class="text-gray-300"> /data</span>
                     <span class="text-purple-400"> --allow-write</span>
@@ -966,13 +966,13 @@
                   <div class="whitespace-nowrap">
                     <span class="text-gray-500">$</span>
                     <span class="text-gray-200"> phpx script.php</span>
-                    <span class="text-ember"> --offline</span>
-                    <span class="text-gray-500 ml-4"># Block all network</span>
+                    <span class="text-purple-400"> --offline</span>
+                    <span class="text-gray-500"># Block all network</span>
                   </div>
                   <div class="whitespace-nowrap">
                     <span class="text-gray-500">$</span>
                     <span class="text-gray-200"> phpx script.php</span>
-                    <span class="text-ember"> --allow-host</span>
+                    <span class="text-purple-400"> --allow-host</span>
                     <span class="text-gray-300"> api.example.com</span>
                   </div>
                 </div>
@@ -988,11 +988,11 @@
                     <span class="text-gray-500">$</span>
                     <span class="text-gray-200"> phpx script.php</span>
                     <span class="text-purple-400"> --memory</span>
-                    <span class="text-spark"> 64</span>
+                    <span class="text-gray-300"> 64</span>
                     <span class="text-purple-400"> --timeout</span>
-                    <span class="text-spark"> 10</span>
+                    <span class="text-gray-300"> 10</span>
                     <span class="text-purple-400"> --cpu</span>
-                    <span class="text-spark"> 5</span>
+                    <span class="text-gray-300"> 5</span>
                   </div>
                 </div>
                 <p class="text-sm text-gray-500 mt-3">
