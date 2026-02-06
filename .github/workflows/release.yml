@@ -14,6 +14,9 @@ jobs:
             artifact: phpx-macos-x64
           - os: ubuntu-latest
             artifact: phpx-linux-x64
+          - os: ubuntu-latest
+            artifact: phpx-linux-arm64
+            goarch: arm64
 
     runs-on: ${{ matrix.os }}
 
@@ -36,6 +39,8 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build binary
+        env:
+          GOARCH: ${{ matrix.goarch }}
         run: make build-release VERSION=${{ steps.version.outputs.version }}
 
       - name: Rename binary
